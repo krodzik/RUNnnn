@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">RUNnnn</string>
+
     <string name="startButton">start</string>
     <string name="pauseButton">pauza</string>
+    <string name="resumeButton">wznów</string>
     <string name="stopButton">stop</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="doneButton">done</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>

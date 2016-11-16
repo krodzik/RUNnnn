@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.traincompany.kamil.runnnn.viewmodel.training.TrainingViewModel" />
+            type="com.rodzik.kamil.runnnn.viewmodel.training.TrainingViewModel" />
     </data>
 
     <RelativeLayout
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:context="com.traincompany.kamil.runnnn.view.activities.TrainingActivity">
+        tools:context="com.rodzik.kamil.runnnn.view.activities.TrainingActivity">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"

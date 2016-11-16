@@ -5,13 +5,22 @@
 
         <variable
             name="viewModel"
-            type="com.traincompany.kamil.runnnn.viewmodel.training.DataViewModel" />
+            type="com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.traincompany.kamil.runnnn.view.fragments.DataFragment">
+        tools:context="com.rodzik.kamil.runnnn.view.fragments.DataFragment">
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:textSize="44sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,8 +38,9 @@
             android:layout_alignParentLeft="true"
             android:layout_margin="16dp"
             android:onClick="@{viewModel.onPauseButtonClicked}"
-            android:text="@string/pauseButton"
-            android:textAllCaps="true" />
+            android:text="@{viewModel.pauseButtonText}"
+            android:textAllCaps="true"
+            tools:text="@string/pauseButton" />
 
         <Button
             android:id="@+id/stop_button"
