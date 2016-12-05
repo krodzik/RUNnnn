@@ -14,21 +14,19 @@ import com.rodzik.kamil.runnnn.databinding.FragmentDataBinding;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModelContract;
 
+import io.reactivex.Observable;
 
-public class DataFragment extends Fragment implements DataViewModelContract.View {
+
+public class DataFragment extends Fragment {
 
     private FragmentDataBinding mBinding;
-    private DataViewModelContract.ViewModel mViewModel;
+    private DataViewModelContract.ViewModel mViewModel = new DataViewModel();
     private Context mContext;
-    private DataViewModelContract.View mView = this;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-    }
-
-    public DataFragment() {
     }
 
     @Override
@@ -41,13 +39,27 @@ public class DataFragment extends Fragment implements DataViewModelContract.View
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
-        mViewModel = new DataViewModel(mContext, mView, mBinding.chronometer);
+        //mViewModel = new DataViewModel(mContext, mBinding.chronometer);
+        mViewModel.setupChronometer(mBinding.chronometer);
         mBinding.setViewModel((DataViewModel) mViewModel);
         return view;
     }
 
+    public void setObservableOnPauseButton(Observable<View> observable) {
+        if (mViewModel != null) {
+            mViewModel.setObservableOnPauseButton(observable);
+        }
+    }
+
+    public void setObservableOnStopButton(Observable<View> observable) {
+        if (mViewModel != null) {
+            mViewModel.setObservableOnStopButton(observable);
+        }
+    }
+
     @Override
-    public void exitTraining() {
-        getActivity().finish();
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.destroy();
     }
 }

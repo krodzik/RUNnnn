@@ -1,11 +1,22 @@
 <resources>
     <string name="app_name">RUNnnn</string>
 
+    <!-- Main Screen -->
     <string name="startButton">start</string>
+
+    <!-- Training Screen -->
+    <string name="dataTab">DANE</string>
+    <string name="mapTab">MAPA</string>
     <string name="pauseButton">pauza</string>
     <string name="resumeButton">wznów</string>
     <string name="stopButton">stop</string>
-    <string name="doneButton">done</string>
-    <string name="title_activity_maps">Map</string>
+
+    <!-- Summary Screen -->
+    <string name="headerMock">Trening #1</string>
+    <string name="doneButton">zakończ</string>
+    <string name="timeText">czas</string>
+    <string name="durationText">czas</string>
+    <string name="no_route_available">Brak dostępnej trasy</string>
+    <string name="mapScreenshotDescription">Map of the training route.</string>
 
 </resources>

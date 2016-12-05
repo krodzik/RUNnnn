@@ -3,14 +3,17 @@
     package="com.rodzik.kamil.runnnn">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design"
-        android:name="android.support.multidex.MultiDexApplication">
+        android:screenOrientation="portrait">
         <activity android:name=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +24,10 @@
         <activity
             android:name=".view.activities.TrainingActivity"
             android:theme="@style/Theme.Design.NoActionBar" />
+        <activity android:name=".view.activities.SummaryActivity" />
         <activity
-            android:name=".view.activities.SummaryActivity" />
+            android:name=".view.activities.MapSummaryActivity"
+            android:theme="@style/Theme.Design.NoActionBar" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -35,7 +40,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
     </application>
 
 </manifest>

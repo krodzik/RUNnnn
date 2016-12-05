@@ -1,112 +1,203 @@
 package com.rodzik.kamil.runnnn.viewmodel.training;
 
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.orhanobut.logger.Logger;
+import com.rodzik.kamil.runnnn.model.LocationModel;
+import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.utils.PermissionUtils;
+import com.rodzik.kamil.runnnn.utils.PixelConverterUtils;
 
-public class MapViewModel implements MapViewModelContract.ViewModel, OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+
+public class MapViewModel implements MapViewModelContract.ViewModel,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    private final float MAP_ZOOM_LEVEL = 17.5f;
 
     private Context mContext;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
     private GoogleMap mMap;
+    private LocationModel mLocationModel;
+    private LatLng mStartLatLng;
+    private LatLng mCurrentLatLng;
+    private boolean mIsFirstUpdatedPoint = true;
+    private PolylineOptions mPolylineOptions;
 
-    public MapViewModel(@NonNull Context context,
-                        @NonNull SupportMapFragment mapFragment) {
+    private CompositeDisposable mDisposables = new CompositeDisposable();
+    private Observable<View> mPauseButtonObservable;
+    private Observable<View> mStopButtonObservable;
+    private boolean mIsPaused;
 
+    @Override
+    public void setContext(Context context) {
         mContext = context;
-        mapFragment.getMapAsync(this);
-
-        // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-
-        mLastLocation = new Location("Me");
-        mLastLocation.setLatitude(53.446990);
-        mLastLocation.setLongitude(14.492432);
-
-        mGoogleApiClient.connect();
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Configure map
-        //mMap.getUiSettings().setAllGesturesEnabled(false);
-
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
+    public void onMapReady(GoogleMap map) {
+        // TODO delete as we check it in previous activity
+        if (PermissionUtils.isLocationAccessPermissionGranted(mContext)) {
+            mMap = map;
+            configureMap();
+            mLocationModel = new LocationModel(mContext, this, this, this);
         } else {
+            // TODO what happen when map start without permission
+            // set text instead of map fragment
             // Show rationale and request permission.
-            Toast.makeText(mContext, "Permission denied. You can't use maps.", Toast.LENGTH_SHORT).show();
         }
-
-//        LatLng zut = new LatLng(53.446990, 14.492432);
-//        mMap.addMarker(new MarkerOptions().position(zut).title("ZUT"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zut,17.0f));
-//        LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-//        Logger.d("What is used");
-//        Logger.d(String.valueOf(mLastLocation.getLatitude()));
-//        Logger.d(String.valueOf(mLastLocation.getLongitude()));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17.0f));
     }
 
-    @Override
-    public void destroy() {
-        mGoogleApiClient.disconnect();
+    private void configureMap() {
+        mMap.setPadding(0, 0, 0, (int) PixelConverterUtils.convertDpToPixel(64, mContext));
+        // Disable on marker click.
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return true;
+            }
+        });
+        configureMapOnPause();
+        mPolylineOptions = new PolylineOptions().color(Color.BLUE).width(10);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        }
-        Logger.d("From Google Services");
-        Logger.d(String.valueOf(mLastLocation.getLatitude()));
-        Logger.d(String.valueOf(mLastLocation.getLongitude()));
+        Location lastKnownLocation = mLocationModel.getLastKnownLocation();
+        LatLng latLngLastKnownLocation = new LatLng(lastKnownLocation.getLatitude(),
+                lastKnownLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngLastKnownLocation, MAP_ZOOM_LEVEL));
 
-        if (mMap != null) {
-            LatLng currentLocation = new LatLng(mLastLocation.getLongitude(), mLastLocation.getLatitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17.0f));
-        }
+        mLocationModel.startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        if (mIsFirstUpdatedPoint) {
+            mStartLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            mIsFirstUpdatedPoint = false;
+        }
+        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Logger.d("Location updated. Lat : %s Lng: %s",
+                String.valueOf(mCurrentLatLng.latitude), String.valueOf(mCurrentLatLng.longitude));
+        updatePolyline();
+        updateCamera();
+        updateMarker();
+    }
+
+    private void updatePolyline() {
+        mMap.clear();
+        mMap.addPolyline(mPolylineOptions.add(mCurrentLatLng));
+    }
+
+    private void updateCamera() {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, MAP_ZOOM_LEVEL));
+    }
+
+    private void updateMarker() {
+        mMap.addMarker(new MarkerOptions().position(mStartLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(mCurrentLatLng));
+    }
+
+    @Override
+    public void setObservableOnPauseButton(Observable<View> pauseButtonObservable) {
+        mPauseButtonObservable = pauseButtonObservable;
+        mDisposables.add(mPauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
+            @Override
+            public void onNext(View value) {
+                onPauseButtonClick();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        }));
+    }
+
+    @Override
+    public void setObservableOnStopButton(Observable<View> stopButtonObservable) {
+        mStopButtonObservable = stopButtonObservable;
+        mDisposables.add(mStopButtonObservable.subscribeWith(new DisposableObserver<View>() {
+            @Override
+            public void onNext(View value) {
+                onStopButtonClick();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    private void onPauseButtonClick() {
+        if (mLocationModel != null) {
+            Logger.d("Pause map");
+            if (mIsPaused) {
+                mLocationModel.startLocationUpdates();
+                mIsPaused = false;
+                configureMapOnPause();
+            } else {
+                mLocationModel.stopLocationUpdates();
+                mIsPaused = true;
+                configureMapOnPause();
+            }
+        }
+    }
+
+    private void configureMapOnPause() {
+        mMap.getUiSettings().setAllGesturesEnabled(mIsPaused);
+        mMap.setMyLocationEnabled(mIsPaused);
+        mMap.getUiSettings().setZoomControlsEnabled(mIsPaused);
+    }
+
+    private void onStopButtonClick() {
+        if (mLocationModel != null) {
+            SummaryModel.getInstance().setPolylineOptions(mPolylineOptions);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        mContext = null;
+        if (mLocationModel != null) {
+            mLocationModel.disconnectLocationModel();
+        }
+        mDisposables.dispose();
     }
 }

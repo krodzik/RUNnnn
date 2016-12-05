@@ -12,28 +12,109 @@
         android:id="@+id/activity_summary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin_with_button"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.rodzik.kamil.runnnn.view.activities.SummaryActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="SUMMARY"
-            android:textSize="40dp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:text="@string/headerMock"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:text="Trening #1" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:layout_below="@id/header">
+
+            <!-- MapFragment with lite mode enabled -->
+            <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/map_lite_mode"
+                class="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:contentDescription="@string/mapScreenshotDescription"
+                map:liteMode="true" />
+
+            <TextView
+                android:id="@+id/no_route_available_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/no_route_available"
+                android:textColor="#C0000000"
+                android:background="#7EFFFFFF"
+                android:textSize="16sp"
+                android:visibility="@{viewModel.noMapAvailableTextVisibility}" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/map"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:text="@{viewModel.time}"
+                android:textAlignment="center"
+                android:textSize="44sp"
+                android:textStyle="bold"
+                tools:text="00:00:00" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:text="@string/timeText"
+                android:textSize="25sp" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/time"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.01"
+            android:background="@color/divider" />
 
         <Button
             android:layout_width="256dp"
             android:layout_height="64dp"
-            android:textAllCaps="true"
-            android:text="@string/doneButton"
-            android:onClick="@{viewModel.onDoneButtonClicked}"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:onClick="@{viewModel.onDoneButtonClicked}"
+            android:text="@string/doneButton"
+            android:textAllCaps="true" />
 
     </RelativeLayout>
 
