@@ -1,2 +1,2 @@
 # RUNnnn
-Running Android App
+Android app for runners.
