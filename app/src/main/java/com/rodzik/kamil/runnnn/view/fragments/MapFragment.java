@@ -23,14 +23,12 @@ import io.reactivex.Observable;
 
 public class MapFragment extends Fragment {
 
-    //    private Context mContext;
     private FragmentMapBinding mBinding;
     private MapViewModelContract.ViewModel mViewModel = new MapViewModel();
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        mContext = context;
         mViewModel.setContext(context);
     }
 

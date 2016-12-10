@@ -24,6 +24,8 @@ public class TrainingActivity extends AppCompatActivity {
     private ActivityTrainingBinding mBinding;
     private TrainingViewModelContract.ViewModel mViewModel;
 
+    private boolean isMapEnable;
+
     private DataFragment mDataFragment;
     private MapFragment mMapFragment;
 
@@ -36,6 +38,7 @@ public class TrainingActivity extends AppCompatActivity {
         initDataBinding();
         createOnClickObservable();
         setupObservableInViewModel();
+        isMapEnable = getIntent().getExtras().getBoolean("MAP");
         setupTabFragment();
         setupViewPager(mBinding.pager);
         mBinding.tabLayout.setupWithViewPager(mBinding.pager);
@@ -81,7 +84,7 @@ public class TrainingActivity extends AppCompatActivity {
         mDataFragment.setObservableOnPauseButton(mOnPauseClickObservable);
         mDataFragment.setObservableOnStopButton(mOnStopClickObservable);
 
-        if (getIntent().getExtras().getBoolean("MAP")) {
+        if (isMapEnable) {
             mMapFragment = new MapFragment();
             mMapFragment.setObservableOnPauseButton(mOnPauseClickObservable);
             mMapFragment.setObservableOnStopButton(mOnStopClickObservable);
@@ -92,7 +95,7 @@ public class TrainingActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         // TODO Create a Collection of fragments and iterate through it.
         adapter.addFragment(mDataFragment, this.getString(R.string.dataTab));
-        if (getIntent().getExtras().getBoolean("MAP")) {
+        if (isMapEnable) {
             adapter.addFragment(mMapFragment, this.getString(R.string.mapTab));
         }
         viewPager.setAdapter(adapter);

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -55,7 +56,6 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
     private void createInstanceGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-
                     .addConnectionCallbacks(mConnectionCallbacks)
                     .addOnConnectionFailedListener(mOnConnectionFailedListener)
                     .addApi(LocationServices.API)
@@ -86,11 +86,10 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
     }
 
     @Override
-    public void onResult(LocationSettingsResult locationSettingsResult) {
+    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
         final Status status = locationSettingsResult.getStatus();
         switch (status.getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
-                Logger.d("All location settings are satisfied.");
                 startLocationUpdates();
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -112,24 +111,6 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
                 break;
         }
     }
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // Check for the integer request code originally supplied to startResolutionForResult().
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.i(TAG, "User agreed to make required location settings changes.");
-                        startLocationUpdates();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i(TAG, "User chose not to make required location settings changes.");
-                        break;
-                }
-                break;
-        }
-    }*/
 
     public void startLocationUpdates() {
         // Permission is checked in ViewModel -> This would never be called without permission.

@@ -28,23 +28,6 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
         getSupportMapFragment().getMapAsync(googleMap -> mViewModel.onMapReady(googleMap));
     }
 
-    public void showHideFragment(final Fragment fragment) {
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.setCustomAnimations(android.R.animator.fade_in,
-//                android.R.animator.fade_out);
-
-        if (fragment.isHidden()) {
-            ft.show(fragment);
-            Logger.d("hidden", "Show");
-        } else {
-            ft.hide(fragment);
-            Logger.d("Shown", "Hide");
-        }
-
-        ft.commit();
-    }
-
     private void initDataBinding() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_summary);
         mViewModel = new SummaryViewModel(this, this);
@@ -54,7 +37,6 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
     private SupportMapFragment getSupportMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
-            Logger.d("mapFragment == null");
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
@@ -65,17 +47,14 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
 
     @Override
     public void hideMapFragment() {
-        Logger.d("Hiding map");
         if (getSupportMapFragment().getView() != null) {
             getSupportMapFragment().getView().setVisibility(View.GONE);
-            showHideFragment(getSupportMapFragment());
-        } else {
-            Logger.d("Can't hide map. View == null.");
         }
     }
 
     @Override
     public void onBackPressed() {
+        // To disable back button in summary.
     }
 
     @Override

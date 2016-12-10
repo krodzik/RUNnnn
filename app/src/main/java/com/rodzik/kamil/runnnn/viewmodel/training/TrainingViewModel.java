@@ -32,8 +32,6 @@ public class TrainingViewModel implements TrainingViewModelContract.ViewModel {
     public TrainingViewModel(@NonNull Context context) {
         mContext = context;
         pauseButtonText = new ObservableField<>(mContext.getString(R.string.pauseButton));
-        // Resetting all previously collected data.
-        SummaryModel.getInstance().reset();
     }
 
     private void onStopButtonClick() {

@@ -40,16 +40,16 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/map"
+            android:id="@+id/map_container"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_below="@id/header"
             android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:layout_below="@id/header">
+            android:paddingTop="5dp">
 
             <!-- MapFragment with lite mode enabled -->
             <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map_lite_mode"
+                android:id="@+id/map"
                 class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -61,10 +61,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
+                android:background="#7EFFFFFF"
                 android:gravity="center"
                 android:text="@string/no_route_available"
                 android:textColor="#C0000000"
-                android:background="#7EFFFFFF"
                 android:textSize="16sp"
                 android:visibility="@{viewModel.noMapAvailableTextVisibility}" />
 
@@ -74,7 +74,7 @@
             android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/map"
+            android:layout_below="@id/map_container"
             android:layout_margin="10dp">
 
             <TextView
