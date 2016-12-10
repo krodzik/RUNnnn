@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.utils.PixelConverterUtils;
 
+@SuppressWarnings("MissingPermission")
 public class MapManager {
     private final float MAP_ZOOM_LEVEL = 17.5f;
     private final float MAP_PADDING_BOTTOM_IN_DP = 64;
