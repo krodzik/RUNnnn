@@ -25,8 +25,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnPauseButton(Observable<View> pauseButtonObservable) {
-        Observable<View> mPauseButtonObservable = pauseButtonObservable;
-        mDisposables.add(mPauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
+        mDisposables.add(pauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
                 onPauseButtonClick();
@@ -46,8 +45,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnStopButton(Observable<View> stopButtonObservable) {
-        Observable<View> mStopButtonObservable = stopButtonObservable;
-        mDisposables.add(mStopButtonObservable.subscribeWith(new DisposableObserver<View>() {
+        mDisposables.add(stopButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
                 onStopButtonClick();

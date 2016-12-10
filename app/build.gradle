@@ -30,6 +30,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        // if true, only report errors
+        ignoreWarnings true
+    }
 }
 
 dependencies {
@@ -46,12 +50,9 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
 
     // Google Play Service
-    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.google.android.gms:play-services:10.0.1'
 
-    // RxAndroid + RxJava
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    // RxJava
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
 
 

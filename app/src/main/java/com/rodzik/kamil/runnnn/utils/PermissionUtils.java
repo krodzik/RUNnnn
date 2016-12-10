@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.orhanobut.logger.Logger;
-
 public class PermissionUtils {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 0;
 

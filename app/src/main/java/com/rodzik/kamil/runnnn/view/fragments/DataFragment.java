@@ -1,6 +1,5 @@
 package com.rodzik.kamil.runnnn.view.fragments;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
