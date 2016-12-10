@@ -25,7 +25,7 @@
             android:layout_alignParentBottom="true"
             android:textAllCaps="true"
             android:text="@string/startButton"
-            android:onClick="@{viewModel.onStartButtonClicked}"/>
+            android:onClick="@{viewModel::onStartButtonClicked}"/>
 
     </RelativeLayout>
 

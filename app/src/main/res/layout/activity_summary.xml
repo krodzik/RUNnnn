@@ -112,7 +112,7 @@
             android:layout_height="64dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:onClick="@{viewModel.onDoneButtonClicked}"
+            android:onClick="@{viewModel::onDoneButtonClicked}"
             android:text="@string/doneButton"
             android:textAllCaps="true" />
 
