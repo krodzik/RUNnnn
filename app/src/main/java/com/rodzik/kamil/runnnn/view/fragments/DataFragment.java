@@ -21,25 +21,12 @@ public class DataFragment extends Fragment {
 
     private FragmentDataBinding mBinding;
     private DataViewModelContract.ViewModel mViewModel = new DataViewModel();
-    private Context mContext;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
-        //mViewModel = new DataViewModel(mContext, mBinding.chronometer);
         mViewModel.setupChronometer(mBinding.chronometer);
         mBinding.setViewModel((DataViewModel) mViewModel);
         return view;

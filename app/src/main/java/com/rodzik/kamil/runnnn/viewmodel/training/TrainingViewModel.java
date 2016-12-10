@@ -8,10 +8,7 @@ import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
-import com.rodzik.kamil.runnnn.utils.PermissionUtils;
 import com.rodzik.kamil.runnnn.view.activities.SummaryActivity;
 
 import io.reactivex.Observable;
@@ -25,8 +22,6 @@ public class TrainingViewModel implements TrainingViewModelContract.ViewModel {
     private Context mContext;
     private boolean mIsPaused;
 
-    private Observable<View> mPauseButtonObservable;
-    private Observable<View> mStopButtonObservable;
     private CompositeDisposable mDisposables = new CompositeDisposable();
 
     public TrainingViewModel(@NonNull Context context) {
@@ -52,7 +47,7 @@ public class TrainingViewModel implements TrainingViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnPauseButton(Observable<View> pauseButtonObservable) {
-        mPauseButtonObservable = pauseButtonObservable;
+        Observable<View> mPauseButtonObservable = pauseButtonObservable;
         mDisposables.add(mPauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
@@ -73,7 +68,7 @@ public class TrainingViewModel implements TrainingViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnStopButton(Observable<View> stopButtonObservable) {
-        mStopButtonObservable = stopButtonObservable;
+        Observable<View> mStopButtonObservable = stopButtonObservable;
         mDisposables.add(mStopButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {

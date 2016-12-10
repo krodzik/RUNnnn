@@ -1,18 +1,15 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
 import android.databinding.DataBindingUtil;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.gms.maps.SupportMapFragment;
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.ActivitySummaryBinding;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
 import com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModelContract;
 

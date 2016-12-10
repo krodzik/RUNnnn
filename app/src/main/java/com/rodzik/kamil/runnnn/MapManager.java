@@ -3,13 +3,10 @@ package com.rodzik.kamil.runnnn;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -23,8 +20,6 @@ public class MapManager {
     private final int MAP_PADDING_IN_DP = 30;
 
     private GoogleMap mMap;
-
-    private int mMapPaddingInPx;
 
     public MapManager(GoogleMap map) {
         mMap = map;

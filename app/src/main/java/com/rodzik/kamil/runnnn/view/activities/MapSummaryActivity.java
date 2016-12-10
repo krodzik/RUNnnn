@@ -1,28 +1,18 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
-import com.rodzik.kamil.runnnn.utils.PixelConverterUtils;
 
 public class MapSummaryActivity extends AppCompatActivity implements OnMapReadyCallback {
 

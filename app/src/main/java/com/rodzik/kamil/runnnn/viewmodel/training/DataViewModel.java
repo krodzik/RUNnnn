@@ -15,9 +15,6 @@ import io.reactivex.observers.DisposableObserver;
 public class DataViewModel implements DataViewModelContract.ViewModel {
 
     private StopwatchModel mStopwatchModel;
-
-    private Observable<View> mPauseButtonObservable;
-    private Observable<View> mStopButtonObservable;
     private CompositeDisposable mDisposables = new CompositeDisposable();
 
     @Override
@@ -28,7 +25,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnPauseButton(Observable<View> pauseButtonObservable) {
-        mPauseButtonObservable = pauseButtonObservable;
+        Observable<View> mPauseButtonObservable = pauseButtonObservable;
         mDisposables.add(mPauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
@@ -49,7 +46,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
 
     @Override
     public void setObservableOnStopButton(Observable<View> stopButtonObservable) {
-        mStopButtonObservable = stopButtonObservable;
+        Observable<View> mStopButtonObservable = stopButtonObservable;
         mDisposables.add(mStopButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {

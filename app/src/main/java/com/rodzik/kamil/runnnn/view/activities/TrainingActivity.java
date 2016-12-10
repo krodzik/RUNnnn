@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.ActivityTrainingBinding;
 import com.rodzik.kamil.runnnn.view.adapters.ViewPagerAdapter;

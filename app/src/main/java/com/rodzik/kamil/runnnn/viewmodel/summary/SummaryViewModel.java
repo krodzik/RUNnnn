@@ -9,17 +9,11 @@ import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
-import com.rodzik.kamil.runnnn.utils.PixelConverterUtils;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
 public class SummaryViewModel implements SummaryViewModelContract.ViewModel,

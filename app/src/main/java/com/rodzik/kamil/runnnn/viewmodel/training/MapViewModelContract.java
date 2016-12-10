@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import io.reactivex.Observable;
 

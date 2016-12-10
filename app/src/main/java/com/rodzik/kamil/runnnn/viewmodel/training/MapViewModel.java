@@ -31,8 +31,6 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     private PolylineOptions mPolylineOptions;
 
     private CompositeDisposable mDisposables = new CompositeDisposable();
-    private Observable<View> mPauseButtonObservable;
-    private Observable<View> mStopButtonObservable;
     private boolean mIsPaused;
 
     private MapManager mMap;
@@ -75,7 +73,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
 
     @Override
     public void setObservableOnPauseButton(Observable<View> pauseButtonObservable) {
-        mPauseButtonObservable = pauseButtonObservable;
+        Observable<View> mPauseButtonObservable = pauseButtonObservable;
         mDisposables.add(mPauseButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
@@ -94,7 +92,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
 
     @Override
     public void setObservableOnStopButton(Observable<View> stopButtonObservable) {
-        mStopButtonObservable = stopButtonObservable;
+        Observable<View> mStopButtonObservable = stopButtonObservable;
         mDisposables.add(mStopButtonObservable.subscribeWith(new DisposableObserver<View>() {
             @Override
             public void onNext(View value) {
