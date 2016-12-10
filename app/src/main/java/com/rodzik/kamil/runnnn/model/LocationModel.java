@@ -21,6 +21,7 @@ import com.orhanobut.logger.Logger;
 
 import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQUIRED;
 
+@SuppressWarnings("MissingPermission")
 public class LocationModel implements ResultCallback<LocationSettingsResult> {
 
     private final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
