@@ -7,6 +7,7 @@ public class SummaryModel {
 
     private String mTime;
     private PolylineOptions mPolylineOptions;
+    private String mDistance;
 
     private SummaryModel() {
     }
@@ -37,5 +38,13 @@ public class SummaryModel {
 
     public void setPolylineOptions(PolylineOptions mPolylineOptions) {
         this.mPolylineOptions = mPolylineOptions;
+    }
+
+    public String getDistance() {
+        return mDistance;
+    }
+
+    public void setDistance(String mDistance) {
+        this.mDistance = mDistance;
     }
 }

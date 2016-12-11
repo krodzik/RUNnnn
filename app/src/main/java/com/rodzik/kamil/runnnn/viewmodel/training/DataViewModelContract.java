@@ -13,5 +13,6 @@ public interface DataViewModelContract {
         void setObservableOnPauseButton(Observable<View> observable);
         void setObservableOnStopButton(Observable<View> observable);
         void setupChronometer(Chronometer chronometer);
+        void enableGpsRelatedFeature();
     }
 }

@@ -19,6 +19,10 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.orhanobut.logger.Logger;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
 import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQUIRED;
 
 @SuppressWarnings("MissingPermission")
@@ -31,27 +35,23 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private LocationSettingsRequest mLocationSettingsRequest;
-    private LocationListener mLocationListener;
     private GoogleApiClient.ConnectionCallbacks mConnectionCallbacks;
     private GoogleApiClient.OnConnectionFailedListener mOnConnectionFailedListener;
 
-    public LocationModel(Context context,
-                         LocationListener locationListener,
+    private static LocationListener mOnLocationChangedListener;
+
+    public LocationModel(@NonNull Context context,
                          GoogleApiClient.ConnectionCallbacks connectionCallbacks,
                          GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
         mContext = context;
-        mLocationListener = locationListener;
         mConnectionCallbacks = connectionCallbacks;
         mOnConnectionFailedListener = onConnectionFailedListener;
 
-        if (mContext != null) {
-            createInstanceGoogleApiClient();
-            createLocationRequest();
-            buildLocationSettingsRequest();
-            checkLocationSettings();
-            mGoogleApiClient.connect();
-
-        }
+        createInstanceGoogleApiClient();
+        createLocationRequest();
+        buildLocationSettingsRequest();
+        checkLocationSettings();
+        mGoogleApiClient.connect();
     }
 
     private void createInstanceGoogleApiClient() {
@@ -91,12 +91,8 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
         final Status status = locationSettingsResult.getStatus();
         switch (status.getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
-                startLocationUpdates();
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                Logger.d("Location settings are not satisfied. Show the user a dialog to " +
-                        "upgrade location settings ");
-
                 try {
                     // Show the dialog by calling startResolutionForResult(), and check the result
                     // in onActivityResult().
@@ -113,14 +109,30 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
         }
     }
 
+    private static Observable<Location> locationObservable = Observable.create(new ObservableOnSubscribe<Location>() {
+        @Override
+        public void subscribe(ObservableEmitter<Location> e) throws Exception {
+            mOnLocationChangedListener = location -> {
+                Logger.d("Sending location from model");
+                // TODO I can return LatLng from here. One transformation instead of 2 (or more)
+                if (e.isDisposed())
+                    return;
+                e.onNext(location);
+            };
+        }
+    }).share();
+
+    public static Observable<Location> getLocationObservable() {
+        return locationObservable;
+    }
+
     public void startLocationUpdates() {
-        // Permission is checked in ViewModel -> This would never be called without permission.
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, mLocationListener);
+                mGoogleApiClient, mLocationRequest, mOnLocationChangedListener);
     }
 
     public void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mOnLocationChangedListener);
     }
 
     public Location getLastKnownLocation() {

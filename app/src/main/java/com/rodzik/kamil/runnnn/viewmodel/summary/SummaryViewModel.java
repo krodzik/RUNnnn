@@ -20,6 +20,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
     public ObservableField<String> time;
+    public ObservableField<String> distance;
     public ObservableInt noMapAvailableTextVisibility;
 
     private Context mContext;
@@ -70,6 +71,10 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     public String getTime() {
         return SummaryModel.getInstance().getTime();
+    }
+
+    public String getDistance() {
+        return SummaryModel.getInstance().getDistance();
     }
 
     public void onDoneButtonClicked(View view) {

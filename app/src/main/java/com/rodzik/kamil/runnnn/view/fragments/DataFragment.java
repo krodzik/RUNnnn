@@ -43,6 +43,10 @@ public class DataFragment extends Fragment {
         }
     }
 
+    public void enableDistanceRelatedFeature() {
+        mViewModel.enableGpsRelatedFeature();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
