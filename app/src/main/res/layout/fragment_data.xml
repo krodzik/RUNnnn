@@ -31,6 +31,32 @@
             android:layout_height="wrap_content"
             android:text="@string/durationText"/>
 
+        <RelativeLayout
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/duration_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="@{viewModel.gpsRelatedFieldsVisibility}">
+
+            <TextView
+                android:id="@+id/distance"
+                android:textSize="44sp"
+                android:text="@{viewModel.distanceField}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="0.00"/>
+
+            <TextView
+                android:id="@+id/distance_text"
+                android:layout_below="@id/distance"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/distanceUnitText"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </layout>
