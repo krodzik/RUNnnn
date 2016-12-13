@@ -13,6 +13,8 @@ public class StopwatchModel {
     private long mLastPauseTime;
     private long mSystemClockStopTime;
 
+    private long timeInMiliseconds;
+
     public StopwatchModel(Chronometer chronometer) {
         mChronometer = chronometer;
         setupChronometer();
@@ -21,6 +23,7 @@ public class StopwatchModel {
     private void setupChronometer() {
         mChronometer.setOnChronometerTickListener(cArg -> {
             long time = SystemClock.elapsedRealtime() - cArg.getBase();
+            timeInMiliseconds = time;
             cArg.setText(formatToReadableTime(time));
         });
     }
@@ -65,5 +68,9 @@ public class StopwatchModel {
     public String getTime() {
         long time = mSystemClockStopTime - mChronometer.getBase();
         return formatToReadableTime(time);
+    }
+
+    public long getTimeInMiliseconds() {
+        return timeInMiliseconds;
     }
 }

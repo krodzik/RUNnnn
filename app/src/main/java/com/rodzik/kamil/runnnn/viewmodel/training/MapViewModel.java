@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.model.LocationModel;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
@@ -24,7 +25,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 
 public class MapViewModel implements MapViewModelContract.ViewModel,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private Context mContext;
     private LocationModel mLocationModel;
@@ -45,7 +46,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
         mPolylineOptions = new PolylineOptions().color(Color.BLUE).width(10);
         mMap = new MapManager(googleMap);
         mMap.configureMapInTraining(mContext);
-        mLocationModel = new LocationModel(mContext, this, this, this);
+        mLocationModel = new LocationModel(mContext, this, this);
     }
 
     @Override
@@ -53,7 +54,33 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
         Location lastKnownLocation = mLocationModel.getLastKnownLocation();
         mMap.moveToLatLng(new LatLng(lastKnownLocation.getLatitude(),
                 lastKnownLocation.getLongitude()));
+        subscribeLocation();
         mLocationModel.startLocationUpdates();
+    }
+
+    private void subscribeLocation() {
+        mDisposables.add(LocationModel.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
+            @Override
+            public void onNext(Location location) {
+                locationChanged(location);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    private void locationChanged(Location location) {
+        mPolylineOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+        mMap.updateMap(mPolylineOptions);
+
     }
 
     @Override
@@ -62,13 +89,6 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mPolylineOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
-        mMap.updateMap(mPolylineOptions);
-
     }
 
     @Override

@@ -11,12 +11,20 @@
     <string name="resumeButton">wznów</string>
     <string name="stopButton">stop</string>
 
+    <!-- Data -->
+    <string name="durationText">czas</string>
+    <string name="distanceUnitText">km</string>
+    <string name="distanceText">dystans</string>
+    <string name="paceText">śr. tempo</string>
+    <string name="minPerKm">min/km</string>
+
     <!-- Summary Screen -->
     <string name="headerMock">Trening #1</string>
     <string name="doneButton">zakończ</string>
-    <string name="timeText">czas</string>
-    <string name="durationText">czas</string>
-    <string name="no_route_available">Brak dostępnej trasy</string>
+    <string name="noRouteAvailable">Brak dostępnej trasy</string>
     <string name="mapScreenshotDescription">Map of the training route.</string>
+    <string name="kmPerHourText">km/h</string>
+    <string name="averageSpeed">śr. pręd.</string>
+    <string name="averagePace">śr. tempo</string>
 
 </resources>
