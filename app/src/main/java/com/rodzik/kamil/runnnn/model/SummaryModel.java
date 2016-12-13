@@ -7,7 +7,8 @@ public class SummaryModel {
 
     private String mTime;
     private PolylineOptions mPolylineOptions;
-    private String mDistance;
+    private double mDistance;   // in meters
+    private long mTimeInMilliseconds;
 
     private SummaryModel() {
     }
@@ -36,15 +37,23 @@ public class SummaryModel {
         return mPolylineOptions;
     }
 
-    public void setPolylineOptions(PolylineOptions mPolylineOptions) {
-        this.mPolylineOptions = mPolylineOptions;
+    public void setPolylineOptions(PolylineOptions polylineOptions) {
+        this.mPolylineOptions = polylineOptions;
     }
 
-    public String getDistance() {
+    public double getDistance() {
         return mDistance;
     }
 
-    public void setDistance(String mDistance) {
-        this.mDistance = mDistance;
+    public void setDistance(double distance) {
+        this.mDistance = distance;
+    }
+
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
+    }
+
+    public void setTimeInMilliseconds(long timeInMilliseconds) {
+        this.mTimeInMilliseconds = timeInMilliseconds;
     }
 }

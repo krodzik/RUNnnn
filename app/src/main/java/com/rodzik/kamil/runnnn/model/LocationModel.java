@@ -28,8 +28,9 @@ import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQ
 @SuppressWarnings("MissingPermission")
 public class LocationModel implements ResultCallback<LocationSettingsResult> {
 
-    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    private final float SMALLEST_DISPLACEMENT = 0;  // Default is 0.
 
     private Context mContext;
     private GoogleApiClient mGoogleApiClient;
@@ -68,6 +69,7 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -113,7 +115,6 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
         @Override
         public void subscribe(ObservableEmitter<Location> e) throws Exception {
             mOnLocationChangedListener = location -> {
-                Logger.d("Sending location from model");
                 // TODO I can return LatLng from here. One transformation instead of 2 (or more)
                 if (e.isDisposed())
                     return;

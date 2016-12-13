@@ -7,7 +7,6 @@ import android.location.Location;
 import android.view.View;
 import android.widget.Chronometer;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.model.LocationModel;
 import com.rodzik.kamil.runnnn.model.StopwatchModel;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
@@ -20,19 +19,30 @@ import io.reactivex.observers.DisposableObserver;
 
 
 public class DataViewModel implements DataViewModelContract.ViewModel {
+    // This is the number of last locations from which we calculating current pace.
+    private final int PACE_BUFFER_SIZE = 5;
 
-    public ObservableField<String> distanceField;
-    public ObservableInt gpsRelatedFieldsVisibility;
+    public final ObservableField<String> distanceField;
+    public final ObservableField<String> paceField;
+    public final ObservableField<String> getSpeedField;
+    public final ObservableInt gpsRelatedFieldsVisibility;
 
-    private Location firstLocation = null;
-    private Location secondLocation = null;
-    private float distance = 0;
-    private String mDistanceString;
     private StopwatchModel mStopwatchModel;
     private CompositeDisposable mDisposables = new CompositeDisposable();
+    private Location mLastLocation = null;
+    private Location mCurrentLocation = null;
+    private double mDistanceBetweenTwoLocations;
+    private boolean mIsFirstLocation = true;
+    private double mDistance = 0;
+    private double mPace = 0;
+    // [0] - Time between two last locations.
+    // [1] - Distance between two last locations.
+    private double[][] mBufferForPaceArray = new double[PACE_BUFFER_SIZE][2];
 
     public DataViewModel() {
         distanceField = new ObservableField<>("0.00");
+        paceField = new ObservableField<>("-:--");
+        getSpeedField = new ObservableField<>("-:--");
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
     }
 
@@ -46,9 +56,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
         mDisposables.add(LocationModel.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
             @Override
             public void onNext(Location location) {
-                Logger.d("Getting location updates in DataViewModel");
-                calculateDistance(location);
-                setDistanceField();
+                updateLocation(location);
             }
 
             @Override
@@ -63,23 +71,84 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
         }));
     }
 
-    private void calculateDistance(Location location) {
-        if (firstLocation == null) {
-            firstLocation = location;
-        } else {
-            secondLocation = location;
-        }
+    private void updateLocation(Location location) {
+        mCurrentLocation = location;
 
-        if (firstLocation != null && secondLocation != null) {
-            distance += firstLocation.distanceTo(secondLocation);
-            firstLocation = null;
-            secondLocation = null;
+        if (mIsFirstLocation) {
+            mLastLocation = location;
+            mIsFirstLocation = false;
+        }
+        mDistanceBetweenTwoLocations = mLastLocation.distanceTo(mCurrentLocation);
+
+        calculatePace();
+        setPaceField();
+
+        if (mCurrentLocation.getAccuracy() < mDistanceBetweenTwoLocations) {
+            calculateDistance();
+            setDistanceField();
+            setSpeed();
+            mLastLocation = mCurrentLocation;
         }
     }
 
+    private void calculateDistance() {
+        mDistance += mDistanceBetweenTwoLocations;
+    }
+
     private void setDistanceField() {
-        mDistanceString = String.format(Locale.US, "%.2f", distance / 1000);
-        distanceField.set(mDistanceString);
+        distanceField.set(String.format(Locale.US, "%.2f", mDistance / 1000));
+    }
+
+    private void calculatePace() {
+        long lastLocationTime = mLastLocation.getTime();
+        long currentLocationTime = mCurrentLocation.getTime();
+        double timeBetweenTwoLocationsInMinutes = (currentLocationTime - lastLocationTime) / 1000;
+
+        mBufferForPaceArray[4][0] = timeBetweenTwoLocationsInMinutes;
+        mBufferForPaceArray[4][1] = mDistanceBetweenTwoLocations;
+
+        if (mBufferForPaceArray[0][1] == 0) {
+            mPace = 0;
+        } else {
+            // Calculating average pace for "PACE_BUFFER_SIZE" last locations.
+            double sumTimeBetweenLocations = 0;
+            double sumDistanceBetweenLocations = 0;
+            for (double[] location: mBufferForPaceArray) {
+                sumTimeBetweenLocations += location[0];
+                sumDistanceBetweenLocations += location[1];
+            }
+            mPace = (sumTimeBetweenLocations / sumDistanceBetweenLocations) * 16.67;
+        }
+
+        shiftArrayLeft(mBufferForPaceArray);
+    }
+
+    private void shiftArrayLeft(double[][] array) {
+        for (int i = 1; i < PACE_BUFFER_SIZE; i++) {
+            array[i-1][0] = array[i][0];
+            array[i-1][1] = array[i][1];
+        }
+        array[PACE_BUFFER_SIZE -1][0] = 0;
+        array[PACE_BUFFER_SIZE -1][1] = 0;
+    }
+
+    private void setPaceField() {
+        String paceString;
+        if (mPace != 0) {
+            paceString = String.format(Locale.US, "%d:%02d", (int) mPace, (int) (mPace * 100) % 100);
+        } else {
+            paceString = "-:--";
+        }
+        paceField.set(paceString);
+    }
+
+    private void setSpeed() {
+        // Speed from location
+        if (mCurrentLocation.hasSpeed()) {
+            getSpeedField.set(String.format(Locale.US, "%.2f", mCurrentLocation.getSpeed() * 3.6));
+        } else {
+            getSpeedField.set("-:--");
+        }
     }
 
     @Override
@@ -130,12 +199,17 @@ public class DataViewModel implements DataViewModelContract.ViewModel {
 
     private void onPauseButtonClick() {
         mStopwatchModel.pauseStopwatch();
+        mIsFirstLocation = true;
+        for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
+            shiftArrayLeft(mBufferForPaceArray);
+        }
     }
 
     private void onStopButtonClick() {
         mStopwatchModel.stopStopwatch();
         SummaryModel.getInstance().setTime(mStopwatchModel.getTime());
-        SummaryModel.getInstance().setDistance(mDistanceString);
+        SummaryModel.getInstance().setDistance(mDistance);
+        SummaryModel.getInstance().setTimeInMilliseconds(mStopwatchModel.getTimeInMiliseconds());
     }
 
     @Override

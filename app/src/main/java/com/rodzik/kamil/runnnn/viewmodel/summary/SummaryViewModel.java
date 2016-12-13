@@ -4,7 +4,6 @@ package com.rodzik.kamil.runnnn.viewmodel.summary;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -16,12 +15,13 @@ import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
+import java.util.Locale;
+
 public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
-    public ObservableField<String> time;
-    public ObservableField<String> distance;
     public ObservableInt noMapAvailableTextVisibility;
+    public ObservableInt gpsRelatedFieldsVisibility;
 
     private Context mContext;
     private SummaryViewModelContract.View mView;
@@ -33,8 +33,8 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         mContext = context;
         mView = view;
 
-        time = new ObservableField<>("00:00:00");
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
+        gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
             mMap.moveCameraToLatLngBounds(mContext,
                     SummaryModel.getInstance().getPolylineOptions());
             noMapAvailableTextVisibility.set(View.GONE);
+            gpsRelatedFieldsVisibility.set(View.VISIBLE);
         } else {
             mView.hideMapFragment();
         }
@@ -74,7 +75,19 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     }
 
     public String getDistance() {
-        return SummaryModel.getInstance().getDistance();
+        return String.format(Locale.US, "%.2f", SummaryModel.getInstance().getDistance() / 1000);
+    }
+
+    public String getAveragePace() {
+        double averagePace = (((SummaryModel.getInstance().getTimeInMilliseconds() / 1000) /
+                SummaryModel.getInstance().getDistance()) * 16.67);
+        return String.format(Locale.US, "%d:%02d", (int) averagePace, (int) (averagePace * 100) % 100);
+    }
+
+    public String getAverageSpeed() {
+        double averageSpeed = ((SummaryModel.getInstance().getDistance() /
+                (SummaryModel.getInstance().getTimeInMilliseconds() / 1000)) * 3.6);
+        return String.format(Locale.US, "%.2f", averageSpeed);
     }
 
     public void onDoneButtonClicked(View view) {

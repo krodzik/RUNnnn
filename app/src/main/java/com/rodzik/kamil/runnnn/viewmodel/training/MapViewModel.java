@@ -62,7 +62,6 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
         mDisposables.add(LocationModel.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
             @Override
             public void onNext(Location location) {
-                Logger.d("Getting location updates in MapViewModel");
                 locationChanged(location);
             }
 
