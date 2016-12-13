@@ -5,15 +5,14 @@
 
         <variable
             name="viewModel"
-            type="com.rodzik.kamil.runnnn.viewmodel.main.MainViewModel" />
+            type="com.rodzik.kamil.runnnn.viewmodel.main.ConnectedDeviceViewModel" />
     </data>
 
     <RelativeLayout
-        android:id="@+id/activity_main"
+        android:id="@+id/activity_connected_devices"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        tools:context="com.rodzik.kamil.runnnn.view.activities.MainActivity">
+        tools:context="com.rodzik.kamil.runnnn.view.activities.ConnectedDeviceActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -24,14 +23,6 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             tools:ignore="AndroidLintUnusedAttribute" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Proszę kliknąć w serce wyżej aby dodać urządzenie Bluetooth do pomiaru tętna." />
-
         <Button
             android:layout_width="match_parent"
             android:layout_height="64dp"
@@ -41,8 +32,8 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:onClick="@{viewModel::onStartButtonClicked}"
-            android:text="@string/startButton"
+            android:onClick="@{viewModel::onAddDeviceButtonClicked}"
+            android:text="@string/addDeviceButton"
             android:textAllCaps="true" />
 
     </RelativeLayout>

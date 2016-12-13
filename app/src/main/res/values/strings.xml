@@ -3,6 +3,10 @@
 
     <!-- Main Screen -->
     <string name="startButton">start</string>
+    <string name="action_sensor">Urządzenia</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="addDeviceButton">Dodaj urządzenie</string>
+    <string name="removeDeviceButton">Usuń urządzenie</string>
 
     <!-- Training Screen -->
     <string name="dataTab">DANE</string>
