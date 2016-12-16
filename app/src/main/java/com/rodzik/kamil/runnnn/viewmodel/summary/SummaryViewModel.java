@@ -27,6 +27,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     private Context mContext;
     private SummaryViewModelContract.View mView;
+    private double mDistance;
 
     private MapManager mMap;
 
@@ -34,6 +35,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
                             SummaryViewModelContract.View view) {
         mContext = context;
         mView = view;
+        mDistance = SummaryModel.getInstance().getDistance();
 
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
@@ -82,13 +84,19 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     }
 
     public String getAveragePace() {
+        if (mDistance == 0) {
+            return "-:--";
+        }
         double averagePace = (((SummaryModel.getInstance().getTimeInMilliseconds() / 1000) /
-                SummaryModel.getInstance().getDistance()) * 16.67);
+                mDistance) * 16.67);
         return String.format(Locale.US, "%d:%02d", (int) averagePace, (int) (averagePace * 100) % 100);
     }
 
     public String getAverageSpeed() {
-        double averageSpeed = ((SummaryModel.getInstance().getDistance() /
+        if (mDistance == 0) {
+            return "-.--";
+        }
+        double averageSpeed = ((mDistance /
                 (SummaryModel.getInstance().getTimeInMilliseconds() / 1000)) * 3.6);
         return String.format(Locale.US, "%.2f", averageSpeed);
     }
