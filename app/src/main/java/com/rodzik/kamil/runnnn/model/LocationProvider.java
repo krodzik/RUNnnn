@@ -26,7 +26,7 @@ import io.reactivex.ObservableOnSubscribe;
 import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQUIRED;
 
 @SuppressWarnings("MissingPermission")
-public class LocationModel implements ResultCallback<LocationSettingsResult> {
+public class LocationProvider implements ResultCallback<LocationSettingsResult> {
 
     private final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -41,9 +41,9 @@ public class LocationModel implements ResultCallback<LocationSettingsResult> {
 
     private static LocationListener mOnLocationChangedListener;
 
-    public LocationModel(@NonNull Context context,
-                         GoogleApiClient.ConnectionCallbacks connectionCallbacks,
-                         GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
+    public LocationProvider(@NonNull Context context,
+                            GoogleApiClient.ConnectionCallbacks connectionCallbacks,
+                            GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
         mContext = context;
         mConnectionCallbacks = connectionCallbacks;
         mOnConnectionFailedListener = onConnectionFailedListener;
