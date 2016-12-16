@@ -1,12 +1,35 @@
 <resources>
     <string name="app_name">RUNnnn</string>
+    <string name="shared_preferences_key">run-key</string>
+    <string name="saved_bluetooth_device_address">Bluetooth LE device address</string>
+    <string name="gps_enable_setting">gps</string>
+    <string name="heart_rate_device_enable_setting">heart rate device</string>
 
     <!-- Main Screen -->
     <string name="startButton">start</string>
     <string name="action_sensor">Urządzenia</string>
     <string name="action_settings">Ustawienia</string>
-    <string name="addDeviceButton">Dodaj urządzenie</string>
-    <string name="removeDeviceButton">Usuń urządzenie</string>
+    <string name="heart_rate">Tętno</string>
+    <string name="addDeviceInfoTitle">Brak urządzenia</string>
+    <string name="addDeviceInfoMessage">Aby użyć tej opcji musisz najpierw dodać swoje urządznie Bluetooth. Aby to zrobić naciśnij serce znajdujące się na górnym pasku.</string>
+    <string name="addDeviceInfoPositive">Zamknij</string>
+    <string name="cantConnectDeviceInfoTitle">Brak połączenia</string>
+    <string name="cantConnectDeviceInfoMessage">Nie można połączyć się z urządzeniem Bluetooth. Upewnij się, że urządzenie, którego próbujesz użyć zostało wcześniej dodane.</string>
+    <string name="cantConnectDeviceInfoPositive">Spróbuj ponowanie</string>
+    <string name="cantConnectDeviceInfoNegative">Zamknij</string>
+
+    <!-- Add Device Screen -->
+    <string name="scanForDevicesButton">Skanuj</string>
+    <string name="stopScanningForDevices">Zatrzymaj</string>
+    <string name="setDeviceAsHeartRateBeltText">Połączyć się z tym urządzeniem i ustawić je jako główne urządzenie do monitorowania tętna podczas treningu?</string>
+    <string name="ble_not_supported">BLE nie jest obsługiwany.</string>
+    <string name="error_bluetooth_le_not_supported">Bluetooth Smart nie jest obsługiwany przez to urządzenie.</string>
+    <string name="unknown_device">Nieznane urządzenie</string>
+    <string name="setDeviceTitle">Wybierz urządzenie</string>
+    <string name="setDeviceMessage">Czy jesteś pewien, że chcesz ustawić %1$s jako domyślne urządzenie do pomiaru tętna?</string>
+    <string name="setDevicePositive">Ustaw</string>
+    <string name="setDeviceNegative">Anuluj</string>
+    <string name="connecting">Łączenie...</string>
 
     <!-- Training Screen -->
     <string name="dataTab">DANE</string>
@@ -21,14 +44,16 @@
     <string name="distanceText">dystans</string>
     <string name="paceText">śr. tempo</string>
     <string name="minPerKm">min/km</string>
+    <string name="bpm">bpm</string>
 
     <!-- Summary Screen -->
     <string name="headerMock">Trening #1</string>
     <string name="doneButton">zakończ</string>
     <string name="noRouteAvailable">Brak dostępnej trasy</string>
     <string name="mapScreenshotDescription">Map of the training route.</string>
-    <string name="kmPerHourText">km/h</string>
+    <string name="kmPerHour">km/h</string>
     <string name="averageSpeed">śr. pręd.</string>
     <string name="averagePace">śr. tempo</string>
+    <string name="averageHeartRate">śr. tętno</string>
 
 </resources>

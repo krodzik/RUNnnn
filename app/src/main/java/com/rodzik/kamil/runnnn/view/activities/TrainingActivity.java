@@ -79,7 +79,12 @@ public class TrainingActivity extends AppCompatActivity {
     }
 
     private void setupTabFragment() {
+        Bundle args = new Bundle();
+        args.putBoolean("MAP", getIntent().getExtras().getBoolean("MAP"));
+        args.putBoolean("HEART_RATE", getIntent().getExtras().getBoolean("HEART_RATE"));
+
         mDataFragment = new DataFragment();
+        mDataFragment.setArguments(args);
         mDataFragment.setObservableOnPauseButton(mOnPauseClickObservable);
         mDataFragment.setObservableOnStopButton(mOnStopClickObservable);
 

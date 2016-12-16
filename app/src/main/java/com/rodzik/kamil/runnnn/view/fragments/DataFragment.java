@@ -24,9 +24,15 @@ public class DataFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // TODO Choose layout depending on available devices.
+        Bundle args = getArguments();
+        boolean isHeartRateEnable = args.getBoolean("HEART_RATE", false);
+
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
+        mViewModel.setContext(getContext());
         mViewModel.setupChronometer(mBinding.chronometer);
+        mViewModel.setupHeartRateMeasurement(isHeartRateEnable);
         mBinding.setViewModel((DataViewModel) mViewModel);
         return view;
     }
