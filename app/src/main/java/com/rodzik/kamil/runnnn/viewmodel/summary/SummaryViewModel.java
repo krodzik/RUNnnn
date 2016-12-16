@@ -15,6 +15,7 @@ import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
+import java.util.List;
 import java.util.Locale;
 
 public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
@@ -22,6 +23,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     public ObservableInt noMapAvailableTextVisibility;
     public ObservableInt gpsRelatedFieldsVisibility;
+    public ObservableInt heartRateRelatedFieldsVisibility;
 
     private Context mContext;
     private SummaryViewModelContract.View mView;
@@ -35,6 +37,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
+        heartRateRelatedFieldsVisibility = new ObservableInt(View.GONE);
     }
 
     @Override
@@ -88,6 +91,20 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         double averageSpeed = ((SummaryModel.getInstance().getDistance() /
                 (SummaryModel.getInstance().getTimeInMilliseconds() / 1000)) * 3.6);
         return String.format(Locale.US, "%.2f", averageSpeed);
+    }
+
+    public String getAverageHeartRate() {
+        List<Integer> heartRateList = SummaryModel.getInstance().getHeartRate();
+        if (heartRateList.isEmpty()) {
+            return "--";
+        }
+        heartRateRelatedFieldsVisibility.set(View.VISIBLE);
+        int heartRateAverage = 0;
+        for (Integer heartRate : heartRateList) {
+            heartRateAverage += heartRate;
+        }
+        heartRateAverage /= heartRateList.size();
+        return String.valueOf(heartRateAverage);
     }
 
     public void onDoneButtonClicked(View view) {

@@ -11,13 +11,11 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.MapManager;
-import com.rodzik.kamil.runnnn.model.LocationModel;
+import com.rodzik.kamil.runnnn.model.LocationProvider;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
 
 import io.reactivex.Observable;
@@ -28,7 +26,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private Context mContext;
-    private LocationModel mLocationModel;
+    private LocationProvider mLocationProvider;
     private PolylineOptions mPolylineOptions;
 
     private CompositeDisposable mDisposables = new CompositeDisposable();
@@ -46,20 +44,20 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
         mPolylineOptions = new PolylineOptions().color(Color.BLUE).width(10);
         mMap = new MapManager(googleMap);
         mMap.configureMapInTraining(mContext);
-        mLocationModel = new LocationModel(mContext, this, this);
+        mLocationProvider = new LocationProvider(mContext, this, this);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Location lastKnownLocation = mLocationModel.getLastKnownLocation();
+        Location lastKnownLocation = mLocationProvider.getLastKnownLocation();
         mMap.moveToLatLng(new LatLng(lastKnownLocation.getLatitude(),
                 lastKnownLocation.getLongitude()));
         subscribeLocation();
-        mLocationModel.startLocationUpdates();
+        mLocationProvider.startLocationUpdates();
     }
 
     private void subscribeLocation() {
-        mDisposables.add(LocationModel.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
+        mDisposables.add(LocationProvider.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
             @Override
             public void onNext(Location location) {
                 locationChanged(location);
@@ -130,13 +128,13 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     }
 
     private void onPauseButtonClick() {
-        if (mLocationModel != null) {
+        if (mLocationProvider != null) {
             if (mIsPaused) {
-                mLocationModel.startLocationUpdates();
+                mLocationProvider.startLocationUpdates();
                 mIsPaused = false;
                 mMap.configureMapOnPause(false);
             } else {
-                mLocationModel.stopLocationUpdates();
+                mLocationProvider.stopLocationUpdates();
                 mIsPaused = true;
                 mMap.configureMapOnPause(true);
             }
@@ -144,7 +142,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     }
 
     private void onStopButtonClick() {
-        if (mLocationModel != null) {
+        if (mLocationProvider != null) {
             SummaryModel.getInstance().setPolylineOptions(mPolylineOptions);
         }
     }
@@ -152,8 +150,8 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     @Override
     public void destroy() {
         mContext = null;
-        if (mLocationModel != null) {
-            mLocationModel.disconnectLocationModel();
+        if (mLocationProvider != null) {
+            mLocationProvider.disconnectLocationModel();
         }
         mDisposables.dispose();
     }

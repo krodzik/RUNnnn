@@ -81,8 +81,7 @@
                 android:id="@+id/pace"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="@{viewModel.gpsRelatedFieldsVisibility}">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/paceValue"
@@ -107,8 +106,7 @@
                 android:id="@+id/getSpeed"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="@{viewModel.gpsRelatedFieldsVisibility}">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/getSpeedValue"
@@ -125,7 +123,52 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/getSpeedValue"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/kmPerHourText" />
+                    android:text="@string/kmPerHour" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/pacePlusSpeed"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider"
+            android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}" />
+
+        <LinearLayout
+            android:id="@+id/heartRate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider1"
+            android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/heartRateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@{viewModel.heartRateField}"
+                    android:textSize="34sp"
+                    tools:text="00" />
+
+                <TextView
+                    android:id="@+id/heartRateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/heartRateValue"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/bpm" />
 
             </RelativeLayout>
 
