@@ -1,5 +1,6 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,11 +17,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ParcelUuid;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,8 +37,8 @@ import com.rodzik.kamil.runnnn.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+@SuppressLint("NewApi")
 public class ConnectDeviceActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 1;
@@ -54,7 +53,6 @@ public class ConnectDeviceActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
     private ScanSettings mScanSettings;
-    private List<ScanFilter> mScanFilterList;
     private ScanCallback mScanCallback;
     private boolean mScanning;
     private Handler mHandler;
@@ -134,8 +132,6 @@ public class ConnectDeviceActivity extends AppCompatActivity {
                 mScanCallback = new ScanCallback() {
                     @Override
                     public void onScanResult(int callbackType, ScanResult result) {
-                        Log.i("callbackType", String.valueOf(callbackType));
-                        Log.i("result", result.toString());
                         BluetoothDevice btDevice = result.getDevice();
                         mLeDeviceListAdapter.addDevice(btDevice);
                         mLeDeviceListAdapter.notifyDataSetChanged();
@@ -232,7 +228,8 @@ public class ConnectDeviceActivity extends AppCompatActivity {
 
             mScanning = true;
             if (Build.VERSION.SDK_INT >= 21) {
-                mBluetoothLeScanner.startScan(mScanFilterList, mScanSettings, mScanCallback);
+                List<ScanFilter> scanFilterList = new ArrayList<>();
+                mBluetoothLeScanner.startScan(scanFilterList, mScanSettings, mScanCallback);
             } else {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
             }
@@ -340,10 +337,5 @@ public class ConnectDeviceActivity extends AppCompatActivity {
         super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }
