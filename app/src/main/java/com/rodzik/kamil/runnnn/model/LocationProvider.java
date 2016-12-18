@@ -28,7 +28,9 @@ import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQ
 @SuppressWarnings("MissingPermission")
 public class LocationProvider implements ResultCallback<LocationSettingsResult> {
 
-    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    public static final int REQUEST_RESOLUTION_REQUIRED = 2;
+
+    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
     private final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private final float SMALLEST_DISPLACEMENT = 0;  // Default is 0.
 
@@ -99,7 +101,7 @@ public class LocationProvider implements ResultCallback<LocationSettingsResult> 
                     // Show the dialog by calling startResolutionForResult(), and check the result
                     // in onActivityResult().
 //                    status.startResolutionForResult((Activity) mContext, REQUEST_CHECK_SETTINGS);
-                    status.startResolutionForResult((Activity) mContext, RESOLUTION_REQUIRED);
+                    status.startResolutionForResult((Activity) mContext, REQUEST_RESOLUTION_REQUIRED);
                 } catch (IntentSender.SendIntentException e) {
                     Logger.d("PendingIntent unable to execute request.");
                 }
@@ -150,7 +152,7 @@ public class LocationProvider implements ResultCallback<LocationSettingsResult> 
         }
     }
 
-    public void disconnectLocationModel() {
+    public void disconnectLocationProvider() {
         stopLocationUpdates();
         mGoogleApiClient.disconnect();
     }

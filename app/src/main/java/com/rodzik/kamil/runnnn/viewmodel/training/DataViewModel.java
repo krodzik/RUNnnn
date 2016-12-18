@@ -214,10 +214,12 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     private void onPauseButtonClick() {
         mIsPaused = !mIsPaused;
         mStopwatchModel.pauseStopwatch();
-        mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
         mIsFirstLocation = true;
         for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
             shiftArrayLeft(mBufferForPaceArray);
+        }
+        if (mIsHeartRateEnable) {
+            mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
         }
     }
 

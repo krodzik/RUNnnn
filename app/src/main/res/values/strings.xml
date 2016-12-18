@@ -17,6 +17,7 @@
     <string name="cantConnectDeviceInfoMessage">Nie można połączyć się z urządzeniem Bluetooth. Upewnij się, że urządzenie, którego próbujesz użyć zostało wcześniej dodane.</string>
     <string name="cantConnectDeviceInfoPositive">Spróbuj ponowanie</string>
     <string name="cantConnectDeviceInfoNegative">Zamknij</string>
+    <string name="gps">GPS</string>
 
     <!-- Add Device Screen -->
     <string name="scanForDevicesButton">Skanuj</string>
@@ -55,5 +56,6 @@
     <string name="averageSpeed">śr. pręd.</string>
     <string name="averagePace">śr. tempo</string>
     <string name="averageHeartRate">śr. tętno</string>
+    <string name="howToAddDeviceInfo">Naciśnij serce na pasku wyżej aby dodać urządzenie Bluetooth do pomiaru tętna.</string>
 
 </resources>
