@@ -11,6 +11,7 @@ public interface MainViewModelContract {
     }
 
     interface View {
+        void requestLocationAccessPermission();
         void connectedToLeDevice();
         void cannotConnectToLeDevice();
         void deviceDisconnected();

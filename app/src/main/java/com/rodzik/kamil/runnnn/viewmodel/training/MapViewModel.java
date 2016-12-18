@@ -151,7 +151,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     public void destroy() {
         mContext = null;
         if (mLocationProvider != null) {
-            mLocationProvider.disconnectLocationModel();
+            mLocationProvider.disconnectLocationProvider();
         }
         mDisposables.dispose();
     }

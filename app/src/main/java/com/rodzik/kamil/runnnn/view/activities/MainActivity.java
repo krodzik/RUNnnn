@@ -1,5 +1,6 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -9,6 +10,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,14 +21,19 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.ActivityMainBinding;
+import com.rodzik.kamil.runnnn.model.LocationProvider;
 import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModelContract;
 
-public class MainActivity extends AppCompatActivity implements MainViewModelContract.View {
+public class MainActivity extends AppCompatActivity implements MainViewModelContract.View,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int REQUEST_ACCESS_LOCATION = 0;
     private static final int REQUEST_ENABLE_BT = 1;
 
     private ActivityMainBinding mBinding;
@@ -40,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
         setupToolbar();
         mBinding.heartRateSwitch.setChecked(false);
         mViewModel.setHeartRateToggle(false);
+
+        mBinding.gpsSwitch.setChecked(false);
+
         mSharedPreferences = this.getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.connecting));
@@ -115,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
                             return;
                         }
                     }
-                    // Show some progress bar. Trying to connect to device right now.
+                    // Show progress bar. Trying to connect to device right now.
                     mProgressDialog.show();
                     mViewModel.connectToBluetoothDevice(mBluetoothDeviceAddress);
                 } else {
@@ -127,15 +139,57 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
     }
 
     @Override
+    public void requestLocationAccessPermission() {
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_ACCESS_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ACCESS_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay!
+                    Logger.d("Permission granted - Location");
+                    // Imitating toggle switch to check again for location resolution.
+                    mBinding.gpsSwitch.setChecked(false);
+                    mBinding.gpsSwitch.toggle();
+                } else {
+                    mBinding.gpsSwitch.setChecked(false);
+                    // permission denied, boo!
+                    Logger.d("Permission not granted - Location");
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // User chose not to enable Bluetooth.
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
             return;
         } else if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-            Logger.d("Result - OK");
+            Logger.d("Result Bluetooth - OK");
             // Show some progress bar. Trying to connect to device right now.
             mProgressDialog.show();
             mViewModel.connectToBluetoothDevice(mBluetoothDeviceAddress);
+        } else if (requestCode == LocationProvider.REQUEST_RESOLUTION_REQUIRED &&
+                resultCode == Activity.RESULT_CANCELED) {
+            Logger.d("Result Resolution - Cancel");
+            mBinding.gpsSwitch.setChecked(false);
+            return;
+        } else if (requestCode == LocationProvider.REQUEST_RESOLUTION_REQUIRED &&
+                resultCode == Activity.RESULT_OK) {
+            Logger.d("Result Resolution - OK");
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -216,5 +270,20 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
     protected void onDestroy() {
         super.onDestroy();
         mViewModel.destroy();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
