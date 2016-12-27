@@ -1,4 +1,4 @@
-package com.rodzik.kamil.runnnn.model;
+package com.rodzik.kamil.runnnn.data;
 
 
 import android.content.BroadcastReceiver;
@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.service.BluetoothLeService;
 import com.rodzik.kamil.runnnn.R;
 
@@ -30,7 +29,6 @@ public class HeartRateProvider {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
-                Logger.e("Unable to initialize Bluetooth");
                 return;
             }
             if (mAutoConnect) {
@@ -60,19 +58,14 @@ public class HeartRateProvider {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                Logger.d("Connected");
                 mHeartRateCallbacks.connected();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                Logger.d("Disconnected");
                 mHeartRateCallbacks.disconnected();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                Logger.d("Service discovered");
                 mHeartRateCallbacks.serviceDiscovered();
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Logger.d("Heart rate : %s", intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                 mHeartRateCallbacks.heartRateUpdate(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             } else if (BluetoothLeService.ACTION_CONNECTION_TIMEOUT.equals(action)) {
-                Logger.d("Connection timeout");
                 mHeartRateCallbacks.connectionTimeout();
             }
         }

@@ -1,5 +1,6 @@
 package com.rodzik.kamil.runnnn.view.fragments;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.FragmentDataBinding;
+import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModelContract;
 
@@ -26,7 +29,11 @@ public class DataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO Choose layout depending on available devices.
         Bundle args = getArguments();
+        boolean isGpsEnable = args.getBoolean("MAP", false);
         boolean isHeartRateEnable = args.getBoolean("HEART_RATE", false);
+
+        TrainingDataModel trainingDataModel = new TrainingDataModel(isGpsEnable, isHeartRateEnable);
+        mViewModel.setTrainingDataModel(trainingDataModel);
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
@@ -34,6 +41,9 @@ public class DataFragment extends Fragment {
         mViewModel.setupChronometer(mBinding.chronometer);
         mViewModel.setupHeartRateMeasurement(isHeartRateEnable);
         mBinding.setViewModel((DataViewModel) mViewModel);
+
+        mBinding.setTrainingData(trainingDataModel);
+
         return view;
     }
 

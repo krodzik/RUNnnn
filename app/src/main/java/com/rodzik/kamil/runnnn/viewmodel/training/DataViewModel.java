@@ -9,11 +9,11 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Chronometer;
 
-import com.orhanobut.logger.Logger;
-import com.rodzik.kamil.runnnn.model.HeartRateProvider;
-import com.rodzik.kamil.runnnn.model.LocationProvider;
-import com.rodzik.kamil.runnnn.model.StopwatchModel;
+import com.rodzik.kamil.runnnn.data.HeartRateProvider;
+import com.rodzik.kamil.runnnn.data.LocationProvider;
+import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,8 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     // Number of last locations from which current pace is calculated.
     private final int PACE_BUFFER_SIZE = 5;
 
+    private TrainingDataModel mModel;
+
     public final ObservableField<String> distanceField;
     public final ObservableField<String> paceField;
     public final ObservableField<String> getSpeedField;
@@ -35,7 +37,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     public final ObservableInt heartRateRelatedFieldsVisibility;
 
     private Context mContext;
-    private StopwatchModel mStopwatchModel;
+    private StopwatchProvider mStopwatchProvider;
     private CompositeDisposable mDisposables = new CompositeDisposable();
     private Location mLastLocation = null;
     private Location mCurrentLocation = null;
@@ -58,6 +60,11 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         heartRateField = new ObservableField<>("--");
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
         heartRateRelatedFieldsVisibility = new ObservableInt(View.GONE);
+    }
+
+    @Override
+    public void setTrainingDataModel(TrainingDataModel model) {
+        mModel = model;
     }
 
     @Override
@@ -167,8 +174,8 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     @Override
     public void setupChronometer(Chronometer chronometer) {
-        mStopwatchModel = new StopwatchModel(chronometer);
-        mStopwatchModel.startStopwatch();
+        mStopwatchProvider = new StopwatchProvider(chronometer);
+        mStopwatchProvider.startStopwatch();
     }
 
     @Override
@@ -213,7 +220,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     private void onPauseButtonClick() {
         mIsPaused = !mIsPaused;
-        mStopwatchModel.pauseStopwatch();
+        mStopwatchProvider.pauseStopwatch();
         mIsFirstLocation = true;
         for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
             shiftArrayLeft(mBufferForPaceArray);
@@ -224,10 +231,10 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     }
 
     private void onStopButtonClick() {
-        mStopwatchModel.stopStopwatch();
-        SummaryModel.getInstance().setTime(mStopwatchModel.getTime());
+        mStopwatchProvider.stopStopwatch();
+        SummaryModel.getInstance().setTime(mStopwatchProvider.getTime());
         SummaryModel.getInstance().setDistance(mDistance);
-        SummaryModel.getInstance().setTimeInMilliseconds(mStopwatchModel.getTimeInMiliseconds());
+        SummaryModel.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
         SummaryModel.getInstance().setHeartRate(mHeartRateList);
     }
 

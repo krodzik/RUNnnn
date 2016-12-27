@@ -15,7 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
-import com.rodzik.kamil.runnnn.model.LocationProvider;
+import com.rodzik.kamil.runnnn.data.LocationProvider;
 import com.rodzik.kamil.runnnn.model.SummaryModel;
 
 import io.reactivex.Observable;

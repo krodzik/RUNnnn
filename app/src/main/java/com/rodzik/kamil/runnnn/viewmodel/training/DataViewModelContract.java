@@ -5,12 +5,15 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Chronometer;
 
+import com.rodzik.kamil.runnnn.model.TrainingDataModel;
+
 import io.reactivex.Observable;
 
 public interface DataViewModelContract {
 
     interface ViewModel {
         void destroy();
+        void setTrainingDataModel(TrainingDataModel model);
         void setContext(Context context);
         void setObservableOnPauseButton(Observable<View> observable);
         void setObservableOnStopButton(Observable<View> observable);

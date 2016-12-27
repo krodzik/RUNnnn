@@ -6,6 +6,13 @@
         <variable
             name="viewModel"
             type="com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel" />
+
+        <variable
+            name="trainingData"
+            type="com.rodzik.kamil.runnnn.model.TrainingDataModel" />
+
+        <import type="android.view.View"/>
+
     </data>
 
     <RelativeLayout
