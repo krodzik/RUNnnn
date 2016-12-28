@@ -1,4 +1,4 @@
-package com.rodzik.kamil.runnnn.model;
+package com.rodzik.kamil.runnnn.data;
 
 
 import android.app.Activity;

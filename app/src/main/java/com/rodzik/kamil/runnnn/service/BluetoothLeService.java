@@ -16,8 +16,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -63,11 +61,9 @@ public class BluetoothLeService extends Service {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
-                Logger.d("Connected to GATT server.");
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
-                Logger.d("Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
             }
         }
@@ -118,16 +114,7 @@ public class BluetoothLeService extends Service {
             }
             final int heartRate = characteristic.getIntValue(format, 1);
             intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        } /*else {
-            // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            }
-        }*/
+        }
         sendBroadcast(intent);
     }
 
@@ -161,7 +148,6 @@ public class BluetoothLeService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Logger.d("Unbinding Service");
         close();
         return super.onUnbind(intent);
     }
@@ -179,14 +165,12 @@ public class BluetoothLeService extends Service {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-                Logger.e("Unable to initialize BluetoothManager.");
                 return false;
             }
         }
 
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Logger.e("Unable to obtain a BluetoothAdapter.");
             return false;
         }
 
@@ -204,18 +188,22 @@ public class BluetoothLeService extends Service {
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
-            Logger.w("BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
 
         //
+        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        if (device == null) {
+            return false;
+        }
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Logger.d("mConnectionState = %1$s \nBluetoothProfile.STATE_CONNECTED = %2$s",
-                        mConnectionState, BluetoothProfile.STATE_CONNECTED);
-                if (mConnectionState != BluetoothProfile.STATE_CONNECTED) {
+                if (mBluetoothManager.getConnectionState(device, BluetoothProfile.GATT_SERVER)
+                        != BluetoothProfile.STATE_CONNECTED &&
+                        mConnectionState != BluetoothProfile.STATE_DISCONNECTED) {
                     String intentAction = ACTION_CONNECTION_TIMEOUT;
                     broadcastUpdate(intentAction);
                 }
@@ -225,23 +213,15 @@ public class BluetoothLeService extends Service {
         // Previously connected device.  Try to reconnect.
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
-            Logger.d("Trying to use an existing mBluetoothGatt for connection.");
+            mConnectionState = STATE_CONNECTING;
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTED;
-                Logger.d("Connect with bluetoothGatt");
                 return true;
             } else {
                 mConnectionState = STATE_DISCONNECTED;
-                Logger.d("Cant connect");
                 return false;
             }
         }
-
-        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        if (device == null) {
-            return false;
-        }
-
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
@@ -256,14 +236,12 @@ public class BluetoothLeService extends Service {
      */
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Logger.w("BluetoothAdapter not initialized");
             return;
         }
         mBluetoothGatt.disconnect();
     }
 
     public void discoverServices() {
-        Logger.d("Connection state before discovering services : %d", mConnectionState);
         if (mConnectionState == STATE_CONNECTED && mBluetoothGatt != null) {
             // Attempts to discover services after successful connection.
             mBluetoothGatt.discoverServices();
@@ -284,11 +262,9 @@ public class BluetoothLeService extends Service {
 
     public void setNotificationForHeartRateCharacteristic(boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Logger.w("BluetoothAdapter not initialized");
             return;
         }
         if (mGattCharacteristicsHeartRate == null) {
-            Logger.w("Not able yet | Not a heart rate measurement characteristic");
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(mGattCharacteristicsHeartRate, enabled);

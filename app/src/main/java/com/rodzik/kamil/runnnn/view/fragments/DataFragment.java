@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.FragmentDataBinding;
+import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.training.DataViewModelContract;
 
@@ -26,14 +27,18 @@ public class DataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // TODO Choose layout depending on available devices.
         Bundle args = getArguments();
+        boolean isGpsEnable = args.getBoolean("MAP", false);
         boolean isHeartRateEnable = args.getBoolean("HEART_RATE", false);
+        TrainingDataModel trainingDataModel = new TrainingDataModel(isGpsEnable, isHeartRateEnable);
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
-        mViewModel.setContext(getContext());
+
+        mViewModel.setModel(trainingDataModel, getContext());
         mViewModel.setupChronometer(mBinding.chronometer);
-        mViewModel.setupHeartRateMeasurement(isHeartRateEnable);
-        mBinding.setViewModel((DataViewModel) mViewModel);
+
+        mBinding.setTrainingData(trainingDataModel);
+
         return view;
     }
 
@@ -47,10 +52,6 @@ public class DataFragment extends Fragment {
         if (mViewModel != null) {
             mViewModel.setObservableOnStopButton(observable);
         }
-    }
-
-    public void enableDistanceRelatedFeature() {
-        mViewModel.enableGpsRelatedFeature();
     }
 
     @Override
