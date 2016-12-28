@@ -4,10 +4,6 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.rodzik.kamil.runnnn.viewmodel.training.DataViewModel" />
-
-        <variable
             name="trainingData"
             type="com.rodzik.kamil.runnnn.model.TrainingDataModel" />
 
@@ -45,13 +41,13 @@
             android:layout_below="@id/duration_text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:visibility="@{viewModel.gpsRelatedFieldsVisibility}">
+            android:visibility="@{trainingData.gpsVisibile ? View.VISIBLE : View.GONE}">
 
             <TextView
                 android:id="@+id/distanceValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.distanceField}"
+                android:text="@{trainingData.distance}"
                 android:textSize="44sp"
                 tools:text="0.00" />
 
@@ -75,14 +71,14 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:background="@color/divider"
-            android:visibility="@{viewModel.gpsRelatedFieldsVisibility}" />
+            android:visibility="@{distance.visibility}" />
 
         <LinearLayout
             android:id="@+id/pacePlusSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider0"
-            android:visibility="@{viewModel.gpsRelatedFieldsVisibility}">
+            android:visibility="@{distance.visibility}">
 
             <RelativeLayout
                 android:id="@+id/pace"
@@ -95,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="@{viewModel.paceField}"
+                    android:text="@{trainingData.pace}"
                     android:textSize="34sp"
                     tools:text="0:00" />
 
@@ -120,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="@{viewModel.getSpeedField}"
+                    android:text="@{trainingData.speed}"
                     android:textSize="34sp"
                     tools:text="0:00" />
 
@@ -146,14 +142,14 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:background="@color/divider"
-            android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}" />
+            android:visibility="@{trainingData.heartRateVisibile ? View.VISIBLE : View.GONE}" />
 
         <LinearLayout
             android:id="@+id/heartRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider1"
-            android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}">
+            android:visibility="@{trainingData.heartRateVisibile ? View.VISIBLE : View.GONE}">
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -165,7 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="@{viewModel.heartRateField}"
+                    android:text="@{trainingData.heartRate}"
                     android:textSize="34sp"
                     tools:text="00" />
 

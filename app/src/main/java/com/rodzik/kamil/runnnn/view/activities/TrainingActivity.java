@@ -90,7 +90,6 @@ public class TrainingActivity extends AppCompatActivity {
         mDataFragment.setObservableOnStopButton(mOnStopClickObservable);
 
         if (isMapEnable) {
-            mDataFragment.enableDistanceRelatedFeature();
             mMapFragment = new MapFragment();
             mMapFragment.setObservableOnPauseButton(mOnPauseClickObservable);
             mMapFragment.setObservableOnStopButton(mOnStopClickObservable);

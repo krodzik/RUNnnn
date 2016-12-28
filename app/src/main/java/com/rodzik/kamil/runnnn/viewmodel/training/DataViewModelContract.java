@@ -13,12 +13,9 @@ public interface DataViewModelContract {
 
     interface ViewModel {
         void destroy();
-        void setTrainingDataModel(TrainingDataModel model);
-        void setContext(Context context);
+        void setModel(TrainingDataModel model, Context context);
+        void setupChronometer(Chronometer chronometer);
         void setObservableOnPauseButton(Observable<View> observable);
         void setObservableOnStopButton(Observable<View> observable);
-        void setupChronometer(Chronometer chronometer);
-        void setupHeartRateMeasurement(boolean enabled);
-        void enableGpsRelatedFeature();
     }
 }

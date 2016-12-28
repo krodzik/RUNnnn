@@ -29,14 +29,6 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     private TrainingDataModel mModel;
 
-    public final ObservableField<String> distanceField;
-    public final ObservableField<String> paceField;
-    public final ObservableField<String> getSpeedField;
-    public final ObservableField<String> heartRateField;
-    public final ObservableInt gpsRelatedFieldsVisibility;
-    public final ObservableInt heartRateRelatedFieldsVisibility;
-
-    private Context mContext;
     private StopwatchProvider mStopwatchProvider;
     private CompositeDisposable mDisposables = new CompositeDisposable();
     private Location mLastLocation = null;
@@ -48,29 +40,22 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     // [0] - Time between two last locations.
     // [1] - Distance between two last locations.
     private double[][] mBufferForPaceArray = new double[PACE_BUFFER_SIZE][2];
-    private boolean mIsHeartRateEnable;
     private HeartRateProvider mHeartRateProvider;
     private List<Integer> mHeartRateList = new ArrayList<>();
     private boolean mIsPaused;
 
     public DataViewModel() {
-        distanceField = new ObservableField<>("0.00");
-        paceField = new ObservableField<>("-:--");
-        getSpeedField = new ObservableField<>("-:--");
-        heartRateField = new ObservableField<>("--");
-        gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
-        heartRateRelatedFieldsVisibility = new ObservableInt(View.GONE);
     }
 
     @Override
-    public void setTrainingDataModel(TrainingDataModel model) {
+    public void setModel(TrainingDataModel model, Context context) {
         mModel = model;
-    }
-
-    @Override
-    public void enableGpsRelatedFeature() {
-        gpsRelatedFieldsVisibility.set(View.VISIBLE);
-        subscribeLocation();
+        if (mModel.isGpsVisibile()) {
+            subscribeLocation();
+        }
+        if (mModel.isHeartRateVisibile()) {
+            mHeartRateProvider = new HeartRateProvider(context, this, true);
+        }
     }
 
     private void subscribeLocation() {
@@ -110,14 +95,6 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
             setSpeed();
             mLastLocation = mCurrentLocation;
         }
-    }
-
-    private void calculateDistance() {
-        mDistance += mDistanceBetweenTwoLocations;
-    }
-
-    private void setDistanceField() {
-        distanceField.set(String.format(Locale.US, "%.2f", mDistance / 1000));
     }
 
     private void calculatePace() {
@@ -160,15 +137,23 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         } else {
             paceString = "-:--";
         }
-        paceField.set(paceString);
+        mModel.setPace(paceString);
+    }
+
+    private void calculateDistance() {
+        mDistance += mDistanceBetweenTwoLocations;
+    }
+
+    private void setDistanceField() {
+        mModel.setDistance(String.format(Locale.US, "%.2f", mDistance / 1000));
     }
 
     private void setSpeed() {
         // Speed from location
         if (mCurrentLocation.hasSpeed()) {
-            getSpeedField.set(String.format(Locale.US, "%.2f", mCurrentLocation.getSpeed() * 3.6));
+            mModel.setSpeed(String.format(Locale.US, "%.2f", mCurrentLocation.getSpeed() * 3.6));
         } else {
-            getSpeedField.set("-:--");
+            mModel.setSpeed("-:--");
         }
     }
 
@@ -225,7 +210,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
             shiftArrayLeft(mBufferForPaceArray);
         }
-        if (mIsHeartRateEnable) {
+        if (mModel.isHeartRateVisibile()) {
             mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
         }
     }
@@ -239,24 +224,9 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     }
 
     @Override
-    public void setContext(@NonNull Context context) {
-        mContext = context;
-    }
-
-    @Override
-    public void setupHeartRateMeasurement(boolean enabled) {
-        if (!enabled) {
-            return;
-        }
-        mIsHeartRateEnable = true;
-        mHeartRateProvider = new HeartRateProvider(mContext, this, true);
-        heartRateRelatedFieldsVisibility.set(View.VISIBLE);
-    }
-
-    @Override
     public void destroy() {
         mDisposables.dispose();
-        if (mIsHeartRateEnable) {
+        if (mModel.isHeartRateVisibile()) {
             mHeartRateProvider.enableHeartRateUpdates(false);
             mHeartRateProvider.destroy();
         }
@@ -269,7 +239,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     @Override
     public void disconnected() {
-        heartRateField.set("--");
+        mModel.setHeartRate("--");
     }
 
     @Override
@@ -279,7 +249,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     @Override
     public void heartRateUpdate(String data) {
-        heartRateField.set(data);
+        mModel.setHeartRate(data);
         mHeartRateList.add(Integer.valueOf(data));
     }
 

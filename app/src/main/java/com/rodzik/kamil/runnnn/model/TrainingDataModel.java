@@ -15,9 +15,7 @@ public class TrainingDataModel extends BaseObservable {
     private String mSpeed;
     @Bindable
     private String mHeartRate;
-    @Bindable
     private boolean mGpsVisibile;
-    @Bindable
     private boolean mHeartRateVisibile;
 
     public TrainingDataModel(boolean gpsVisible, boolean heartRateVisible) {
@@ -68,5 +66,13 @@ public class TrainingDataModel extends BaseObservable {
     public void setHeartRate(String heartRate) {
         this.mHeartRate = heartRate;
         notifyPropertyChanged(BR.heartRate);
+    }
+
+    public boolean isGpsVisibile() {
+        return mGpsVisibile;
+    }
+
+    public boolean isHeartRateVisibile() {
+        return mHeartRateVisibile;
     }
 }

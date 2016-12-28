@@ -1,6 +1,5 @@
 package com.rodzik.kamil.runnnn.view.fragments;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.FragmentDataBinding;
 import com.rodzik.kamil.runnnn.model.TrainingDataModel;
@@ -31,16 +29,13 @@ public class DataFragment extends Fragment {
         Bundle args = getArguments();
         boolean isGpsEnable = args.getBoolean("MAP", false);
         boolean isHeartRateEnable = args.getBoolean("HEART_RATE", false);
-
         TrainingDataModel trainingDataModel = new TrainingDataModel(isGpsEnable, isHeartRateEnable);
-        mViewModel.setTrainingDataModel(trainingDataModel);
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_data, container, false);
         View view = mBinding.getRoot();
-        mViewModel.setContext(getContext());
+
+        mViewModel.setModel(trainingDataModel, getContext());
         mViewModel.setupChronometer(mBinding.chronometer);
-        mViewModel.setupHeartRateMeasurement(isHeartRateEnable);
-        mBinding.setViewModel((DataViewModel) mViewModel);
 
         mBinding.setTrainingData(trainingDataModel);
 
@@ -57,10 +52,6 @@ public class DataFragment extends Fragment {
         if (mViewModel != null) {
             mViewModel.setObservableOnStopButton(observable);
         }
-    }
-
-    public void enableDistanceRelatedFeature() {
-        mViewModel.enableGpsRelatedFeature();
     }
 
     @Override
