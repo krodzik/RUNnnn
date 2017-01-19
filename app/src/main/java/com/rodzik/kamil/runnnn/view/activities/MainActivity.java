@@ -1,16 +1,15 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,45 +17,36 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.databinding.ActivityMainBinding;
-import com.rodzik.kamil.runnnn.data.LocationProvider;
-import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModel;
-import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModelContract;
+import com.rodzik.kamil.runnnn.view.fragments.HomeFragment;
 
-public class MainActivity extends AppCompatActivity implements MainViewModelContract.View {
-
-    private static final int REQUEST_ACCESS_LOCATION = 0;
-    private static final int REQUEST_ENABLE_BT = 1;
-
-    private ActivityMainBinding mBinding;
-    private MainViewModelContract.ViewModel mViewModel;
-    private ProgressDialog mProgressDialog;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataBinding();
-        setupToolbar();
-        mBinding.gpsSwitch.setChecked(false);
-        mBinding.heartRateSwitch.setChecked(false);
-        setupProgressDialog();
-    }
-
-    private void initDataBinding() {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mViewModel = new MainViewModel(this, this);
-        mBinding.setViewModel((MainViewModel) mViewModel);
-    }
-
-    private void setupToolbar() {
-        Toolbar toolbar = mBinding.toolbar;
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
 
-    private void setupProgressDialog() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.connecting));
-        mProgressDialog.setCancelable(false);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        if (getFragmentManager().findFragmentById(R.id.content_main) == null) {
+            // update the main content by replacing fragments
+            Fragment fragment = new HomeFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();
+        }
     }
 
     @Override
@@ -86,116 +76,54 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
     }
 
     @Override
-    public void requestLocationAccessPermission() {
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_ACCESS_LOCATION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_ACCESS_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Imitating toggle switch to check again for location resolution.
-                    mBinding.gpsSwitch.setChecked(false);
-                    mBinding.gpsSwitch.toggle();
-                } else {
-                    mBinding.gpsSwitch.setChecked(false);
-                }
-            }
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public void requestEnableBluetooth() {
-        mBinding.heartRateSwitch.setChecked(false);
-        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-    }
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            return;
-        } else if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-            // Show progress bar. Trying to connect to device right now.
-            showProgressDialog();
-            mBinding.heartRateSwitch.setChecked(true);
-        } else if (requestCode == LocationProvider.REQUEST_RESOLUTION_REQUIRED &&
-                resultCode == Activity.RESULT_CANCELED) {
-            mBinding.gpsSwitch.setChecked(false);
-            return;
-        } else if (requestCode == LocationProvider.REQUEST_RESOLUTION_REQUIRED &&
-                resultCode == Activity.RESULT_OK) {
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+            setTitle("RUNnnn");
+            // update the main content by replacing fragments
+            Fragment fragment = new HomeFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();
+
+        } else if (id == R.id.nav_gallery) {
+            setTitle("History");
+            // update the main content by replacing fragments
+            /*Fragment fragment = new HistoryFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();*/
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
-    @Override
-    public void showProgressDialog() {
-        if (mProgressDialog.isShowing()) {
-            return;
-        }
-        mProgressDialog.show();
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void showFirstNeedToAddDeviceDialog() {
-        mBinding.heartRateSwitch.setChecked(false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(R.string.addDeviceInfoTitle);
-        builder.setMessage(R.string.addDeviceInfoMessage);
-        builder.setPositiveButton(R.string.addDeviceInfoPositive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
-    @Override
-    public void showCannotConnectToDeviceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(R.string.cantConnectDeviceInfoTitle);
-        builder.setMessage(R.string.cantConnectDeviceInfoMessage);
-        builder.setPositiveButton(R.string.cantConnectDeviceInfoPositive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                showProgressDialog();
-                mViewModel.connectToBluetoothDevice();
-            }
-        });
-        builder.setNegativeButton(R.string.cantConnectDeviceInfoNegative, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setHeartRateSwitchOff();
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    @Override
-    public void setHeartRateSwitchOff() {
-        mBinding.heartRateSwitch.setChecked(false);
+    public void setTitle(CharSequence title) {
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.destroy();
     }
 }

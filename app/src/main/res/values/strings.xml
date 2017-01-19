@@ -6,6 +6,10 @@
     <string name="heart_rate_device_enable_setting">heart rate device</string>
 
     <!-- Main Screen -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Home Fragment -->
     <string name="startButton">start</string>
     <string name="action_sensor">Urządzenia</string>
     <string name="action_settings">Ustawienia</string>
