@@ -8,7 +8,6 @@ import java.util.List;
 public class SummarySingleton {
     private static SummarySingleton mInstance = null;
 
-    private String mTime;
     private PolylineOptions mPolylineOptions;
     private double mDistance;   // in meters
     private long mTimeInMilliseconds;
@@ -25,19 +24,10 @@ public class SummarySingleton {
     }
 
     public void reset() {
-        mTime = null;
         mPolylineOptions = null;
         mDistance = 0;
         mTimeInMilliseconds = 0;
         mHeartRate.clear();
-    }
-
-    public String getTime() {
-        return mTime;
-    }
-
-    public void setTime(String time) {
-        this.mTime = time;
     }
 
     public PolylineOptions getPolylineOptions() {
