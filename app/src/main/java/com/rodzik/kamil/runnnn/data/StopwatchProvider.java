@@ -28,7 +28,7 @@ public class StopwatchProvider {
         });
     }
 
-    private String formatToReadableTime(long time) {
+    public static String formatToReadableTime(long time) {
         int h = (int) (time / 3600000);
         int m = (int) (time - h * 3600000) / 60000;
         int s = (int) (time - h * 3600000 - m * 60000) / 1000;
@@ -63,11 +63,6 @@ public class StopwatchProvider {
             return;
         }
         mSystemClockStopTime = SystemClock.elapsedRealtime();
-    }
-
-    public String getTime() {
-        long time = mSystemClockStopTime - mChronometer.getBase();
-        return formatToReadableTime(time);
     }
 
     public long getTimeInMilliseconds() {

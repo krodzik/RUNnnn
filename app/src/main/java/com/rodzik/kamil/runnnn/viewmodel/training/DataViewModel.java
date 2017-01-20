@@ -214,7 +214,6 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     private void onStopButtonClick() {
         mStopwatchProvider.stopStopwatch();
-        SummarySingleton.getInstance().setTime(mStopwatchProvider.getTime());
         SummarySingleton.getInstance().setDistance(mDistance);
         SummarySingleton.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
         SummarySingleton.getInstance().setHeartRate(mHeartRateList);

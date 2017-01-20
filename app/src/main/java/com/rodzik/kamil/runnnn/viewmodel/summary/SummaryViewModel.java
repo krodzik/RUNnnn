@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.rodzik.kamil.runnnn.MapManager;
+import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
@@ -76,7 +77,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     }
 
     public String getTime() {
-        return SummarySingleton.getInstance().getTime();
+        return StopwatchProvider.formatToReadableTime(SummarySingleton.getInstance().getTimeInMilliseconds());
     }
 
     public String getDistance() {
