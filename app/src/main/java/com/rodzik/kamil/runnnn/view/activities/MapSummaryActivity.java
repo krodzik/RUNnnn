@@ -12,7 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 
 public class MapSummaryActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -55,10 +55,10 @@ public class MapSummaryActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         MapManager mMap = new MapManager(googleMap);
 
-        mMap.drawRoute(SummaryModel.getInstance().getPolylineOptions());
+        mMap.drawRoute(SummarySingleton.getInstance().getPolylineOptions());
         googleMap.setOnCameraIdleListener(() -> {
             mMap.moveCameraToLatLngBounds(getBaseContext(),
-                    SummaryModel.getInstance().getPolylineOptions());
+                    SummarySingleton.getInstance().getPolylineOptions());
             googleMap.setOnCameraIdleListener(null);
         });
     }

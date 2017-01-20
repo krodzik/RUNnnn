@@ -1,74 +1,38 @@
 package com.rodzik.kamil.runnnn.model;
 
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SummaryModel {
-    private static SummaryModel mInstance = null;
+    private String date;
+    private String time;
+    private double distance;
 
-    private String mTime;
-    private PolylineOptions mPolylineOptions;
-    private double mDistance;   // in meters
-    private long mTimeInMilliseconds;
-    private List<Integer> mHeartRate = new ArrayList<>();
-
-    private SummaryModel() {
+    public SummaryModel(String date, String time, double distance) {
+        this.date = date;
+        this.time = time;
+        this.distance = distance;
     }
 
-    public static SummaryModel getInstance() {
-        if (mInstance == null) {
-            mInstance = new SummaryModel();
-        }
-        return mInstance;
+    public String getDate() {
+        return date;
     }
 
-    public void reset() {
-        mTime = null;
-        mPolylineOptions = null;
-        mDistance = 0;
-        mTimeInMilliseconds = 0;
-        mHeartRate.clear();
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getTime() {
-        return mTime;
+        return time;
     }
 
     public void setTime(String time) {
-        this.mTime = time;
-    }
-
-    public PolylineOptions getPolylineOptions() {
-        return mPolylineOptions;
-    }
-
-    public void setPolylineOptions(PolylineOptions polylineOptions) {
-        this.mPolylineOptions = polylineOptions;
+        this.time = time;
     }
 
     public double getDistance() {
-        return mDistance;
+        return distance;
     }
 
     public void setDistance(double distance) {
-        this.mDistance = distance;
-    }
-
-    public long getTimeInMilliseconds() {
-        return mTimeInMilliseconds;
-    }
-
-    public void setTimeInMilliseconds(long timeInMilliseconds) {
-        this.mTimeInMilliseconds = timeInMilliseconds;
-    }
-
-    public List<Integer> getHeartRate() {
-        return mHeartRate;
-    }
-
-    public void setHeartRate(List<Integer> heartRate) {
-        this.mHeartRate.addAll(heartRate);
+        this.distance = distance;
     }
 }

@@ -12,7 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.rodzik.kamil.runnnn.MapManager;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
                             SummaryViewModelContract.View view) {
         mContext = context;
         mView = view;
-        mDistance = SummaryModel.getInstance().getDistance();
+        mDistance = SummarySingleton.getInstance().getDistance();
 
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
@@ -44,14 +44,14 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (SummaryModel.getInstance().getPolylineOptions() != null &&
-                !SummaryModel.getInstance().getPolylineOptions().getPoints().isEmpty()) {
+        if (SummarySingleton.getInstance().getPolylineOptions() != null &&
+                !SummarySingleton.getInstance().getPolylineOptions().getPoints().isEmpty()) {
 
             mMap = new MapManager(googleMap);
             mMap.configureMapInSummary(this, this);
-            mMap.drawRoute(SummaryModel.getInstance().getPolylineOptions());
+            mMap.drawRoute(SummarySingleton.getInstance().getPolylineOptions());
             mMap.moveCameraToLatLngBounds(mContext,
-                    SummaryModel.getInstance().getPolylineOptions());
+                    SummarySingleton.getInstance().getPolylineOptions());
             noMapAvailableTextVisibility.set(View.GONE);
             gpsRelatedFieldsVisibility.set(View.VISIBLE);
         } else {
@@ -76,18 +76,18 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     }
 
     public String getTime() {
-        return SummaryModel.getInstance().getTime();
+        return SummarySingleton.getInstance().getTime();
     }
 
     public String getDistance() {
-        return String.format(Locale.US, "%.2f", SummaryModel.getInstance().getDistance() / 1000);
+        return String.format(Locale.US, "%.2f", mDistance / 1000);
     }
 
     public String getAveragePace() {
         if (mDistance == 0) {
             return "-:--";
         }
-        double averagePace = (((SummaryModel.getInstance().getTimeInMilliseconds() / 1000) /
+        double averagePace = (((SummarySingleton.getInstance().getTimeInMilliseconds() / 1000) /
                 mDistance) * 16.67);
         return String.format(Locale.US, "%d:%02d", (int) averagePace, (int) (averagePace * 100) % 100);
     }
@@ -97,12 +97,12 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
             return "-.--";
         }
         double averageSpeed = ((mDistance /
-                (SummaryModel.getInstance().getTimeInMilliseconds() / 1000)) * 3.6);
+                (SummarySingleton.getInstance().getTimeInMilliseconds() / 1000)) * 3.6);
         return String.format(Locale.US, "%.2f", averageSpeed);
     }
 
     public String getAverageHeartRate() {
-        List<Integer> heartRateList = SummaryModel.getInstance().getHeartRate();
+        List<Integer> heartRateList = SummarySingleton.getInstance().getHeartRate();
         if (heartRateList.isEmpty()) {
             return "--";
         }
@@ -117,7 +117,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     public void onDoneButtonClicked(View view) {
         // Delete training.
-        SummaryModel.getInstance().reset();
+        SummarySingleton.getInstance().reset();
 
         ((Activity) mContext).finish();
     }

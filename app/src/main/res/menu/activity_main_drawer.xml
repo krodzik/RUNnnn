@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_gps_fixed_white_24dp"
+            android:icon="@drawable/ic_directions_run_black_24dp"
             android:title="Training" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_heart_pulse_24dp"
+            android:icon="@drawable/ic_equalizer_black_24dp"
             android:title="History" />
     </group>
 

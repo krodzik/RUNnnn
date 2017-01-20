@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rodzik.kamil.runnnn.R;
+import com.rodzik.kamil.runnnn.view.fragments.HistoryFragment;
 import com.rodzik.kamil.runnnn.view.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -105,12 +106,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             setTitle("History");
             // update the main content by replacing fragments
-            /*Fragment fragment = new HistoryFragment();
+            Fragment fragment = new HistoryFragment();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.content_main, fragment);
-            ft.commit();*/
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

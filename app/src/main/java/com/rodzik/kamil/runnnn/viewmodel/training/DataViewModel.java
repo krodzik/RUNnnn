@@ -2,17 +2,14 @@ package com.rodzik.kamil.runnnn.viewmodel.training;
 
 
 import android.content.Context;
-import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Chronometer;
 
 import com.rodzik.kamil.runnnn.data.HeartRateProvider;
 import com.rodzik.kamil.runnnn.data.LocationProvider;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 
 import java.util.ArrayList;
@@ -217,10 +214,10 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     private void onStopButtonClick() {
         mStopwatchProvider.stopStopwatch();
-        SummaryModel.getInstance().setTime(mStopwatchProvider.getTime());
-        SummaryModel.getInstance().setDistance(mDistance);
-        SummaryModel.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
-        SummaryModel.getInstance().setHeartRate(mHeartRateList);
+        SummarySingleton.getInstance().setTime(mStopwatchProvider.getTime());
+        SummarySingleton.getInstance().setDistance(mDistance);
+        SummarySingleton.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
+        SummarySingleton.getInstance().setHeartRate(mHeartRateList);
     }
 
     @Override
