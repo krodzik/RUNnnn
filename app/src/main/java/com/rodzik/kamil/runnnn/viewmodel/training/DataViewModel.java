@@ -12,7 +12,9 @@ import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,10 +49,10 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     @Override
     public void setModel(TrainingDataModel model, Context context) {
         mModel = model;
-        if (mModel.isGpsVisibile()) {
+        if (mModel.isGpsVisible()) {
             subscribeLocation();
         }
-        if (mModel.isHeartRateVisibile()) {
+        if (mModel.isHeartRateVisible()) {
             mHeartRateProvider = new HeartRateProvider(context, this, true);
         }
     }
@@ -207,13 +209,16 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
             shiftArrayLeft(mBufferForPaceArray);
         }
-        if (mModel.isHeartRateVisibile()) {
+        if (mModel.isHeartRateVisible()) {
             mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
         }
     }
 
     private void onStopButtonClick() {
         mStopwatchProvider.stopStopwatch();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy  HH:mm", Locale.US);
+        Date date = new Date();
+        SummarySingleton.getInstance().setName(dateFormat.format(date));
         SummarySingleton.getInstance().setDistance(mDistance);
         SummarySingleton.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
         SummarySingleton.getInstance().setHeartRate(mHeartRateList);
@@ -222,7 +227,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     @Override
     public void destroy() {
         mDisposables.dispose();
-        if (mModel.isHeartRateVisibile()) {
+        if (mModel.isHeartRateVisible()) {
             mHeartRateProvider.enableHeartRateUpdates(false);
             mHeartRateProvider.destroy();
         }

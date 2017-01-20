@@ -143,7 +143,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
 
     private void onStopButtonClick() {
         if (mLocationProvider != null) {
-            SummarySingleton.getInstance().setPolylineOptions(mPolylineOptions);
+            SummarySingleton.getInstance().setLatLngList(mPolylineOptions.getPoints());
         }
     }
 

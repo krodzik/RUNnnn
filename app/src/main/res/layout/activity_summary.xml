@@ -41,11 +41,11 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.75"
-                        android:text="@string/headerMock"
-                        android:textAlignment="center"
-                        android:textSize="30sp"
+                        android:text="@{viewModel.name}"
+                        android:textAlignment="textStart"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        tools:text="Trening #1" />
+                        tools:text="21.01.17  20:33" />
 
                 </LinearLayout>
 
@@ -317,13 +317,29 @@
 
         </ScrollView>
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_weight="0"
-            android:onClick="@{viewModel::onDoneButtonClicked}"
-            android:text="@string/doneButton"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="60dp"
+            android:onClick="@{viewModel::onRejectButtonClicked}"
+            android:text="@string/doneRejectButton"
             android:textAllCaps="true" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="60dp"
+            android:onClick="@{viewModel::onSaveButtonClicked}"
+            android:text="@string/doneSaveButton"
+            android:textAllCaps="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

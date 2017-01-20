@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableInt;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.model.SummarySingleton;
@@ -18,6 +20,8 @@ import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
 import java.util.List;
 import java.util.Locale;
+
+import io.realm.Realm;
 
 public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
@@ -32,6 +36,8 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     private MapManager mMap;
 
+    private Realm mRealm;
+
     public SummaryViewModel(@NonNull Context context,
                             SummaryViewModelContract.View view) {
         mContext = context;
@@ -41,18 +47,21 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
         heartRateRelatedFieldsVisibility = new ObservableInt(View.GONE);
+
+        mRealm = Realm.getDefaultInstance();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (SummarySingleton.getInstance().getPolylineOptions() != null &&
-                !SummarySingleton.getInstance().getPolylineOptions().getPoints().isEmpty()) {
+
+        if (SummarySingleton.getInstance().getLatLngList() != null &&
+                !SummarySingleton.getInstance().getLatLngList().isEmpty()) {
 
             mMap = new MapManager(googleMap);
             mMap.configureMapInSummary(this, this);
-            mMap.drawRoute(SummarySingleton.getInstance().getPolylineOptions());
+            mMap.drawRoute(new PolylineOptions().addAll(SummarySingleton.getInstance().getLatLngList()).color(Color.BLUE).width(10));
             mMap.moveCameraToLatLngBounds(mContext,
-                    SummarySingleton.getInstance().getPolylineOptions());
+                    new PolylineOptions().addAll(SummarySingleton.getInstance().getLatLngList()));
             noMapAvailableTextVisibility.set(View.GONE);
             gpsRelatedFieldsVisibility.set(View.VISIBLE);
         } else {
@@ -74,6 +83,10 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     private void startMapSummaryActivity() {
         Intent intent = new Intent(mContext, MapSummaryActivity.class);
         mContext.startActivity(intent);
+    }
+
+    public String getName() {
+        return SummarySingleton.getInstance().getName();
     }
 
     public String getTime() {
@@ -116,15 +129,21 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         return String.valueOf(heartRateAverage);
     }
 
-    public void onDoneButtonClicked(View view) {
+    public void onRejectButtonClicked(View view) {
         // Delete training.
         SummarySingleton.getInstance().reset();
 
         ((Activity) mContext).finish();
     }
 
+    public void onSaveButtonClicked(View view) {
+        // Saving training to database
+
+    }
+
     @Override
     public void destroy() {
         mContext = null;
+        mRealm.close();
     }
 }

@@ -41,7 +41,7 @@
             android:layout_below="@id/duration_text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:visibility="@{trainingData.gpsVisibile ? View.VISIBLE : View.GONE}">
+            android:visibility="@{trainingData.gpsVisible ? View.VISIBLE : View.GONE}">
 
             <TextView
                 android:id="@+id/distanceValue"
@@ -142,14 +142,14 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:background="@color/divider"
-            android:visibility="@{trainingData.heartRateVisibile ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{trainingData.heartRateVisible ? View.VISIBLE : View.GONE}" />
 
         <LinearLayout
             android:id="@+id/heartRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider1"
-            android:visibility="@{trainingData.heartRateVisibile ? View.VISIBLE : View.GONE}">
+            android:visibility="@{trainingData.heartRateVisible ? View.VISIBLE : View.GONE}">
 
             <RelativeLayout
                 android:layout_width="0dp"

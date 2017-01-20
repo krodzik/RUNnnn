@@ -15,18 +15,18 @@ public class TrainingDataModel extends BaseObservable {
     private String mSpeed;
     @Bindable
     private String mHeartRate;
-    private boolean mGpsVisibile;
-    private boolean mHeartRateVisibile;
+    private boolean mGpsVisible;
+    private boolean mHeartRateVisible;
 
     public TrainingDataModel(boolean gpsVisible, boolean heartRateVisible) {
-        mGpsVisibile = gpsVisible;
+        mGpsVisible = gpsVisible;
         if (gpsVisible) {
             mDistance = "0.00";
             mPace = "-:--";
             mSpeed = "-:--";
         }
 
-        mHeartRateVisibile = heartRateVisible;
+        mHeartRateVisible = heartRateVisible;
         if (heartRateVisible) {
             mHeartRate = "--";
         }
@@ -68,11 +68,11 @@ public class TrainingDataModel extends BaseObservable {
         notifyPropertyChanged(BR.heartRate);
     }
 
-    public boolean isGpsVisibile() {
-        return mGpsVisibile;
+    public boolean isGpsVisible() {
+        return mGpsVisible;
     }
 
-    public boolean isHeartRateVisibile() {
-        return mHeartRateVisibile;
+    public boolean isHeartRateVisible() {
+        return mHeartRateVisible;
     }
 }
