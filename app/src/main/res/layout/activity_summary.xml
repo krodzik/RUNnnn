@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.time}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="00:00:00" />
 
@@ -101,7 +101,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/durationText"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.distance}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -152,7 +152,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/distanceText"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averagePace}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -203,7 +203,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averagePace"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -230,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averageSpeed}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -254,7 +254,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averageSpeed"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -281,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averageHeartRate}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="00" />
 
@@ -305,7 +305,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averageHeartRate"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -322,21 +322,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/divider4"
+                    android:layout_marginTop="10dp"
                     android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}">
 
                     <TextView
                         android:id="@+id/chartName"
-                        android:layout_margin="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="Tętno w czasie biegu"/>
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/heart_rate_in_time"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/chart"
-                        android:layout_below="@id/chartName"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp" />
+                        android:layout_height="400dp"
+                        android:layout_below="@id/chartName" />
                 </RelativeLayout>
 
             </RelativeLayout>

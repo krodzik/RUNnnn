@@ -7,7 +7,7 @@
             name="trainingData"
             type="com.rodzik.kamil.runnnn.model.TrainingDataModel" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
     </data>
 

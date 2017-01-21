@@ -64,5 +64,7 @@
     <string name="averageHeartRate">śr. tętno</string>
     <string name="howToAddDeviceInfo">Naciśnij serce na pasku wyżej aby dodać urządzenie Bluetooth do pomiaru tętna.</string>
     <string name="distance_in_time"> km w </string>
+    <string name="heart_rate_in_time">Tętno w czasie biegu</string>
+    <string name="runnnn_mail">runnnn.developers@gmail.com</string>
 
 </resources>
