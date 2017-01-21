@@ -13,9 +13,13 @@ public interface DataViewModelContract {
 
     interface ViewModel {
         void destroy();
+
         void setModel(TrainingDataModel model, Context context);
+
         void setupChronometer(Chronometer chronometer);
+
         void setObservableOnPauseButton(Observable<View> observable);
+
         void setObservableOnStopButton(Observable<View> observable);
     }
 }

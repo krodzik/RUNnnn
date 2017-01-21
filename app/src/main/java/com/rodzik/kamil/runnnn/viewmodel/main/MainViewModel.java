@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.data.HeartRateProvider;
 import com.rodzik.kamil.runnnn.data.LocationProvider;
@@ -75,7 +74,6 @@ public class MainViewModel implements MainViewModelContract.ViewModel,
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Logger.e("Connection to google services failed");
         Toast.makeText(mContext, R.string.errorCannotConnectToGoogleService, Toast.LENGTH_SHORT).show();
         gpsChecked.set(false);
     }
@@ -113,7 +111,6 @@ public class MainViewModel implements MainViewModelContract.ViewModel,
         mBluetoothDeviceAddress =
                 mSharedPreferences.getString(mContext.getString(R.string.saved_bluetooth_device_address),
                         "empty");
-        Logger.d(mBluetoothDeviceAddress);
         if (mBluetoothDeviceAddress.compareTo("empty") == 0 ||
                 !BluetoothAdapter.checkBluetoothAddress(mBluetoothDeviceAddress)) {
             return false;

@@ -32,7 +32,7 @@ public class TrainingViewModel implements TrainingViewModelContract.ViewModel {
     private void onStopButtonClick() {
         Intent intent = new Intent(mContext, SummaryActivity.class);
         mContext.startActivity(intent);
-        ((Activity)mContext).finish();
+        ((Activity) mContext).finish();
     }
 
     private void onPauseButtonClick() {

@@ -17,9 +17,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     private List<HistoryItemModel> mHistoryItemModels = new ArrayList<>();
     private final OnItemClickListener mListener;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mDateView;
         public TextView mDistanceView;
@@ -38,14 +35,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             mTimeView.setText(item.getTime());
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(position);
                 }
             });
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public HistoryAdapter(OnItemClickListener listener) {
         mListener = listener;
     }
@@ -58,14 +55,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         mHistoryItemModels = myDataset;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public HistoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
-        // create a new view
+                                                          int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.history_item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }

@@ -75,7 +75,7 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
     @Override
     public void onBackPressed() {
         // To disable back button in summary.
-        if (SummarySingleton.getInstance().isFromDatabase()){
+        if (SummarySingleton.getInstance().isFromDatabase()) {
             super.onBackPressed();
         }
     }

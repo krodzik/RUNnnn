@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class RUNnnnApplication extends Application {
     public RUNnnnApplication() {

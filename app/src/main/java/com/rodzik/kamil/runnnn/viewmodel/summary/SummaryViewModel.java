@@ -23,7 +23,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.database.RealmInt;
@@ -166,10 +165,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         description.setText("");
         mChart.setDescription(description);
 
-        Logger.d("Elements in heart rate : " + SummarySingleton.getInstance().getHeartRate().size());
-        Logger.d("Seconds in time : " + SummarySingleton.getInstance().getTimeInMilliseconds()/1000);
-
-        setData((int)SummarySingleton.getInstance().getTimeInMilliseconds()/1000,
+        setData((int) SummarySingleton.getInstance().getTimeInMilliseconds() / 1000,
                 SummarySingleton.getInstance().getHeartRate());
         mChart.animateXY(2000, 0);
         mChart.invalidate();
@@ -181,12 +177,12 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
         if (heartRateList.size() < time) {
             for (int i = heartRateList.size(); i >= time; i++) {
-                heartRateList.add(heartRateList.get(i-1));
+                heartRateList.add(heartRateList.get(i - 1));
             }
         }
 
         for (int i = 0; i < time; i++) {
-            yVals.add(new Entry(i*1000, heartRateList.get(i)));
+            yVals.add(new Entry(i * 1000, heartRateList.get(i)));
         }
 
         LineDataSet set1;

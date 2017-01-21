@@ -9,7 +9,9 @@ public interface TrainingViewModelContract {
 
     interface ViewModel {
         void setObservableOnPauseButton(Observable<View> observable);
+
         void setObservableOnStopButton(Observable<View> observable);
+
         void destroy();
     }
 }

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.database.RealmInt;
@@ -73,7 +72,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Logger.d("onResume");
         mAdapter.clearAdapter();
 
         // Load database

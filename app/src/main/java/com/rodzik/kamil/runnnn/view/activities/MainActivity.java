@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.view.fragments.HistoryFragment;
 import com.rodzik.kamil.runnnn.view.fragments.HomeFragment;

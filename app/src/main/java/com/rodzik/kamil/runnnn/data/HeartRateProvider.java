@@ -10,8 +10,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 
-import com.rodzik.kamil.runnnn.service.BluetoothLeService;
 import com.rodzik.kamil.runnnn.R;
+import com.rodzik.kamil.runnnn.service.BluetoothLeService;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 import static android.content.Context.MODE_PRIVATE;

@@ -32,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 
 import java.util.ArrayList;
@@ -185,7 +184,6 @@ public class ConnectDeviceActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.setDevicePositive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Logger.d("saving this device to shared preferences : %s", device.getAddress());
                 mSharedPreferences.edit().putString(getString(R.string.saved_bluetooth_device_address),
                         device.getAddress()).apply();
                 finish();
