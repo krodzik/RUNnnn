@@ -2,20 +2,19 @@ package com.rodzik.kamil.runnnn.viewmodel.training;
 
 
 import android.content.Context;
-import android.databinding.ObservableField;
-import android.databinding.ObservableInt;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Chronometer;
 
-import com.orhanobut.logger.Logger;
-import com.rodzik.kamil.runnnn.model.HeartRateProvider;
-import com.rodzik.kamil.runnnn.model.LocationProvider;
-import com.rodzik.kamil.runnnn.model.StopwatchModel;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.data.HeartRateProvider;
+import com.rodzik.kamil.runnnn.data.LocationProvider;
+import com.rodzik.kamil.runnnn.data.StopwatchProvider;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
+import com.rodzik.kamil.runnnn.model.TrainingDataModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,15 +26,9 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     // Number of last locations from which current pace is calculated.
     private final int PACE_BUFFER_SIZE = 5;
 
-    public final ObservableField<String> distanceField;
-    public final ObservableField<String> paceField;
-    public final ObservableField<String> getSpeedField;
-    public final ObservableField<String> heartRateField;
-    public final ObservableInt gpsRelatedFieldsVisibility;
-    public final ObservableInt heartRateRelatedFieldsVisibility;
+    private TrainingDataModel mModel;
 
-    private Context mContext;
-    private StopwatchModel mStopwatchModel;
+    private StopwatchProvider mStopwatchProvider;
     private CompositeDisposable mDisposables = new CompositeDisposable();
     private Location mLastLocation = null;
     private Location mCurrentLocation = null;
@@ -46,24 +39,23 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     // [0] - Time between two last locations.
     // [1] - Distance between two last locations.
     private double[][] mBufferForPaceArray = new double[PACE_BUFFER_SIZE][2];
-    private boolean mIsHeartRateEnable;
     private HeartRateProvider mHeartRateProvider;
     private List<Integer> mHeartRateList = new ArrayList<>();
     private boolean mIsPaused;
 
     public DataViewModel() {
-        distanceField = new ObservableField<>("0.00");
-        paceField = new ObservableField<>("-:--");
-        getSpeedField = new ObservableField<>("-:--");
-        heartRateField = new ObservableField<>("--");
-        gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
-        heartRateRelatedFieldsVisibility = new ObservableInt(View.GONE);
+        SummarySingleton.getInstance().reset();
     }
 
     @Override
-    public void enableGpsRelatedFeature() {
-        gpsRelatedFieldsVisibility.set(View.VISIBLE);
-        subscribeLocation();
+    public void setModel(TrainingDataModel model, Context context) {
+        mModel = model;
+        if (mModel.isGpsVisible()) {
+            subscribeLocation();
+        }
+        if (mModel.isHeartRateVisible()) {
+            mHeartRateProvider = new HeartRateProvider(context, this, true);
+        }
     }
 
     private void subscribeLocation() {
@@ -103,14 +95,6 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
             setSpeed();
             mLastLocation = mCurrentLocation;
         }
-    }
-
-    private void calculateDistance() {
-        mDistance += mDistanceBetweenTwoLocations;
-    }
-
-    private void setDistanceField() {
-        distanceField.set(String.format(Locale.US, "%.2f", mDistance / 1000));
     }
 
     private void calculatePace() {
@@ -153,22 +137,30 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         } else {
             paceString = "-:--";
         }
-        paceField.set(paceString);
+        mModel.setPace(paceString);
+    }
+
+    private void calculateDistance() {
+        mDistance += mDistanceBetweenTwoLocations;
+    }
+
+    private void setDistanceField() {
+        mModel.setDistance(String.format(Locale.US, "%.2f", mDistance / 1000));
     }
 
     private void setSpeed() {
         // Speed from location
         if (mCurrentLocation.hasSpeed()) {
-            getSpeedField.set(String.format(Locale.US, "%.2f", mCurrentLocation.getSpeed() * 3.6));
+            mModel.setSpeed(String.format(Locale.US, "%.2f", mCurrentLocation.getSpeed() * 3.6));
         } else {
-            getSpeedField.set("-:--");
+            mModel.setSpeed("-:--");
         }
     }
 
     @Override
     public void setupChronometer(Chronometer chronometer) {
-        mStopwatchModel = new StopwatchModel(chronometer);
-        mStopwatchModel.startStopwatch();
+        mStopwatchProvider = new StopwatchProvider(chronometer);
+        mStopwatchProvider.startStopwatch();
     }
 
     @Override
@@ -213,41 +205,30 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     private void onPauseButtonClick() {
         mIsPaused = !mIsPaused;
-        mStopwatchModel.pauseStopwatch();
-        mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
+        mStopwatchProvider.pauseStopwatch();
         mIsFirstLocation = true;
         for (int i = PACE_BUFFER_SIZE; i > 0; i--) {
             shiftArrayLeft(mBufferForPaceArray);
         }
+        if (mModel.isHeartRateVisible()) {
+            mHeartRateProvider.enableHeartRateUpdates(!mIsPaused);
+        }
     }
 
     private void onStopButtonClick() {
-        mStopwatchModel.stopStopwatch();
-        SummaryModel.getInstance().setTime(mStopwatchModel.getTime());
-        SummaryModel.getInstance().setDistance(mDistance);
-        SummaryModel.getInstance().setTimeInMilliseconds(mStopwatchModel.getTimeInMiliseconds());
-        SummaryModel.getInstance().setHeartRate(mHeartRateList);
-    }
-
-    @Override
-    public void setContext(@NonNull Context context) {
-        mContext = context;
-    }
-
-    @Override
-    public void setupHeartRateMeasurement(boolean enabled) {
-        if (!enabled) {
-            return;
-        }
-        mIsHeartRateEnable = true;
-        mHeartRateProvider = new HeartRateProvider(mContext, this, true);
-        heartRateRelatedFieldsVisibility.set(View.VISIBLE);
+        mStopwatchProvider.stopStopwatch();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy  HH:mm", Locale.US);
+        Date date = new Date();
+        SummarySingleton.getInstance().setName(dateFormat.format(date));
+        SummarySingleton.getInstance().setDistance(mDistance);
+        SummarySingleton.getInstance().setTimeInMilliseconds(mStopwatchProvider.getTimeInMilliseconds());
+        SummarySingleton.getInstance().setHeartRate(mHeartRateList);
     }
 
     @Override
     public void destroy() {
         mDisposables.dispose();
-        if (mIsHeartRateEnable) {
+        if (mModel.isHeartRateVisible()) {
             mHeartRateProvider.enableHeartRateUpdates(false);
             mHeartRateProvider.destroy();
         }
@@ -260,7 +241,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     @Override
     public void disconnected() {
-        heartRateField.set("--");
+        mModel.setHeartRate("--");
     }
 
     @Override
@@ -270,7 +251,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
 
     @Override
     public void heartRateUpdate(String data) {
-        heartRateField.set(data);
+        mModel.setHeartRate(data);
         mHeartRateList.add(Integer.valueOf(data));
     }
 

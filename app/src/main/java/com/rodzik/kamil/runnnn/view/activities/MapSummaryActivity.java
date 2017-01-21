@@ -1,5 +1,6 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,9 +11,10 @@ import android.view.MenuItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 
 public class MapSummaryActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -55,10 +57,10 @@ public class MapSummaryActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         MapManager mMap = new MapManager(googleMap);
 
-        mMap.drawRoute(SummaryModel.getInstance().getPolylineOptions());
+        mMap.drawRoute(new PolylineOptions().addAll(SummarySingleton.getInstance().getLatLngList()).color(Color.BLUE).width(10));
         googleMap.setOnCameraIdleListener(() -> {
             mMap.moveCameraToLatLngBounds(getBaseContext(),
-                    SummaryModel.getInstance().getPolylineOptions());
+                    new PolylineOptions().addAll(SummarySingleton.getInstance().getLatLngList()));
             googleMap.setOnCameraIdleListener(null);
         });
     }

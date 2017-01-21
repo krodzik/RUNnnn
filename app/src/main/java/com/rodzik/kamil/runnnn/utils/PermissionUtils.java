@@ -17,10 +17,8 @@ public class PermissionUtils {
     }
 
     public static void requestLocationPermission(Activity activity) {
-        if (!isLocationAccessPermissionGranted(activity)) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-        }
+        ActivityCompat.requestPermissions(activity,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
     }
 }

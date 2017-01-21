@@ -35,34 +35,30 @@
             android:layout_below="@id/tab_layout"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <Button
-            android:id="@+id/pause_button"
-            android:layout_width="160dp"
-            android:layout_height="64dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_with_button"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@{viewModel.pauseButtonText}"
-            android:textAllCaps="true"
-            tools:text="@string/pauseButton" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/stop_button"
-            android:layout_width="160dp"
-            android:layout_height="64dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_with_button"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/stopButton"
-            android:textAllCaps="true" />
+            <Button
+                android:id="@+id/pause_button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="0.5"
+                android:text="@{viewModel.pauseButtonText}"
+                android:textAllCaps="true"
+                tools:text="@string/pauseButton" />
+
+            <Button
+                android:id="@+id/stop_button"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_weight="0.5"
+                android:text="@string/stopButton"
+                android:textAllCaps="true" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

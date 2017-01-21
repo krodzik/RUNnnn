@@ -6,12 +6,30 @@
         <variable
             name="viewModel"
             type="com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                tools:ignore="AndroidLintUnusedAttribute" />
+
+        </android.support.design.widget.AppBarLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -28,32 +46,10 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.rodzik.kamil.runnnn.view.activities.SummaryActivity">
 
-                <LinearLayout
-                    android:id="@+id/header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.75"
-                        android:text="@string/headerMock"
-                        android:textAlignment="center"
-                        android:textSize="30sp"
-                        android:textStyle="bold"
-                        tools:text="Trening #1" />
-
-                </LinearLayout>
-
                 <RelativeLayout
                     android:id="@+id/map_container"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_below="@id/header"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp">
 
@@ -93,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.time}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="00:00:00" />
 
@@ -105,7 +101,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/durationText"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -132,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.distance}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -156,7 +152,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/distanceText"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -183,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averagePace}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -207,7 +203,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averagePace"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -234,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averageSpeed}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="0.00" />
 
@@ -258,7 +254,7 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averageSpeed"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
                 </RelativeLayout>
 
@@ -285,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.averageHeartRate}"
                         android:textAlignment="center"
-                        android:textSize="44sp"
+                        android:textSize="@dimen/summary_bold_text_size"
                         android:textStyle="bold"
                         tools:text="00" />
 
@@ -309,21 +305,71 @@
                         android:layout_centerInParent="true"
                         android:text="@string/averageHeartRate"
                         android:textAllCaps="true"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/summary_secondary_text_size" />
 
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/averageHeartRate"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/divider4"
+                    android:layout_marginTop="10dp"
+                    android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}">
+
+                    <TextView
+                        android:id="@+id/chartName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/heart_rate_in_time"
+                        android:textAllCaps="true"
+                        android:textSize="@dimen/summary_secondary_text_size" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_below="@id/chartName" />
                 </RelativeLayout>
 
             </RelativeLayout>
 
         </ScrollView>
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:onClick="@{viewModel::onDoneButtonClicked}"
-            android:text="@string/doneButton"
-            android:textAllCaps="true" />
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:onClick="@{viewModel::onRejectButtonClicked}"
+                android:text="@{viewModel.isFromDatabase ? @string/doneDeleteButton : @string/doneRejectButton}"
+                android:textAllCaps="true" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:onClick="@{viewModel::onSaveButtonClicked}"
+                android:text="@string/doneSaveButton"
+                android:textAllCaps="true"
+                android:visibility="@{viewModel.isFromDatabase ? View.GONE : View.VISIBLE}" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

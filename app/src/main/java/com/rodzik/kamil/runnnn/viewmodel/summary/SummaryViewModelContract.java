@@ -7,6 +7,7 @@ public interface SummaryViewModelContract {
 
     interface ViewModel {
         void onMapReady(GoogleMap googleMap);
+
         void destroy();
     }
 

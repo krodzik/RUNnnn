@@ -15,8 +15,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
-import com.rodzik.kamil.runnnn.model.LocationProvider;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.data.LocationProvider;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -143,7 +143,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
 
     private void onStopButtonClick() {
         if (mLocationProvider != null) {
-            SummaryModel.getInstance().setPolylineOptions(mPolylineOptions);
+            SummarySingleton.getInstance().setLatLngList(mPolylineOptions.getPoints());
         }
     }
 
@@ -151,7 +151,7 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     public void destroy() {
         mContext = null;
         if (mLocationProvider != null) {
-            mLocationProvider.disconnectLocationModel();
+            mLocationProvider.disconnectLocationProvider();
         }
         mDisposables.dispose();
     }

@@ -6,6 +6,10 @@
     <string name="heart_rate_device_enable_setting">heart rate device</string>
 
     <!-- Main Screen -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Home Fragment -->
     <string name="startButton">start</string>
     <string name="action_sensor">Urządzenia</string>
     <string name="action_settings">Ustawienia</string>
@@ -17,12 +21,13 @@
     <string name="cantConnectDeviceInfoMessage">Nie można połączyć się z urządzeniem Bluetooth. Upewnij się, że urządzenie, którego próbujesz użyć zostało wcześniej dodane.</string>
     <string name="cantConnectDeviceInfoPositive">Spróbuj ponowanie</string>
     <string name="cantConnectDeviceInfoNegative">Zamknij</string>
+    <string name="gps">GPS</string>
+    <string name="errorCannotConnectToGoogleService">Nie można połączyć się z Google Play Service</string>
 
     <!-- Add Device Screen -->
     <string name="scanForDevicesButton">Skanuj</string>
     <string name="stopScanningForDevices">Zatrzymaj</string>
     <string name="setDeviceAsHeartRateBeltText">Połączyć się z tym urządzeniem i ustawić je jako główne urządzenie do monitorowania tętna podczas treningu?</string>
-    <string name="ble_not_supported">BLE nie jest obsługiwany.</string>
     <string name="error_bluetooth_le_not_supported">Bluetooth Smart nie jest obsługiwany przez to urządzenie.</string>
     <string name="unknown_device">Nieznane urządzenie</string>
     <string name="setDeviceTitle">Wybierz urządzenie</string>
@@ -47,13 +52,19 @@
     <string name="bpm">bpm</string>
 
     <!-- Summary Screen -->
-    <string name="headerMock">Trening #1</string>
-    <string name="doneButton">zakończ</string>
+    <string name="doneSaveButton">zapisz</string>
+    <string name="doneExitButton">wyjdź</string>
+    <string name="doneRejectButton">odrzuć</string>
+    <string name="doneDeleteButton">usuń</string>
     <string name="noRouteAvailable">Brak dostępnej trasy</string>
     <string name="mapScreenshotDescription">Map of the training route.</string>
     <string name="kmPerHour">km/h</string>
     <string name="averageSpeed">śr. pręd.</string>
     <string name="averagePace">śr. tempo</string>
     <string name="averageHeartRate">śr. tętno</string>
+    <string name="howToAddDeviceInfo">Naciśnij serce na pasku wyżej aby dodać urządzenie Bluetooth do pomiaru tętna.</string>
+    <string name="distance_in_time"> km w </string>
+    <string name="heart_rate_in_time">Tętno w czasie biegu</string>
+    <string name="runnnn_mail">runnnn.developers@gmail.com</string>
 
 </resources>

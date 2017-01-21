@@ -1,4 +1,4 @@
-package com.rodzik.kamil.runnnn.model;
+package com.rodzik.kamil.runnnn.data;
 
 
 import android.os.SystemClock;
@@ -6,16 +6,16 @@ import android.widget.Chronometer;
 
 import java.util.Locale;
 
-public class StopwatchModel {
+public class StopwatchProvider {
 
     private Chronometer mChronometer;
     private boolean mIsPaused;
     private long mLastPauseTime;
     private long mSystemClockStopTime;
 
-    private long timeInMiliseconds;
+    private long mTimeInMilliseconds;
 
-    public StopwatchModel(Chronometer chronometer) {
+    public StopwatchProvider(Chronometer chronometer) {
         mChronometer = chronometer;
         setupChronometer();
     }
@@ -23,12 +23,12 @@ public class StopwatchModel {
     private void setupChronometer() {
         mChronometer.setOnChronometerTickListener(cArg -> {
             long time = SystemClock.elapsedRealtime() - cArg.getBase();
-            timeInMiliseconds = time;
+            mTimeInMilliseconds = time;
             cArg.setText(formatToReadableTime(time));
         });
     }
 
-    private String formatToReadableTime(long time) {
+    public static String formatToReadableTime(long time) {
         int h = (int) (time / 3600000);
         int m = (int) (time - h * 3600000) / 60000;
         int s = (int) (time - h * 3600000 - m * 60000) / 1000;
@@ -65,12 +65,7 @@ public class StopwatchModel {
         mSystemClockStopTime = SystemClock.elapsedRealtime();
     }
 
-    public String getTime() {
-        long time = mSystemClockStopTime - mChronometer.getBase();
-        return formatToReadableTime(time);
-    }
-
-    public long getTimeInMiliseconds() {
-        return timeInMiliseconds;
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
     }
 }

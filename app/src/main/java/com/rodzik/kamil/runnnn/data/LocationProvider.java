@@ -1,4 +1,4 @@
-package com.rodzik.kamil.runnnn.model;
+package com.rodzik.kamil.runnnn.data;
 
 
 import android.app.Activity;
@@ -17,18 +17,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.orhanobut.logger.Logger;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
-import static com.google.android.gms.common.api.CommonStatusCodes.RESOLUTION_REQUIRED;
-
 @SuppressWarnings("MissingPermission")
 public class LocationProvider implements ResultCallback<LocationSettingsResult> {
 
-    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
+    public static final int REQUEST_RESOLUTION_REQUIRED = 2;
+
+    private final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
     private final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private final float SMALLEST_DISPLACEMENT = 0;  // Default is 0.
 
@@ -96,17 +95,11 @@ public class LocationProvider implements ResultCallback<LocationSettingsResult> 
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 try {
-                    // Show the dialog by calling startResolutionForResult(), and check the result
-                    // in onActivityResult().
-//                    status.startResolutionForResult((Activity) mContext, REQUEST_CHECK_SETTINGS);
-                    status.startResolutionForResult((Activity) mContext, RESOLUTION_REQUIRED);
+                    status.startResolutionForResult((Activity) mContext, REQUEST_RESOLUTION_REQUIRED);
                 } catch (IntentSender.SendIntentException e) {
-                    Logger.d("PendingIntent unable to execute request.");
                 }
                 break;
             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                Logger.d("Location settings are inadequate, and cannot be fixed here. Dialog " +
-                        "not created.");
                 break;
         }
     }
@@ -150,7 +143,7 @@ public class LocationProvider implements ResultCallback<LocationSettingsResult> 
         }
     }
 
-    public void disconnectLocationModel() {
+    public void disconnectLocationProvider() {
         stopLocationUpdates();
         mGoogleApiClient.disconnect();
     }

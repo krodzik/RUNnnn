@@ -1,65 +1,58 @@
 package com.rodzik.kamil.runnnn.view.activities;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.databinding.ActivityMainBinding;
-import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModel;
-import com.rodzik.kamil.runnnn.viewmodel.main.MainViewModelContract;
+import com.rodzik.kamil.runnnn.view.fragments.HistoryFragment;
+import com.rodzik.kamil.runnnn.view.fragments.HomeFragment;
 
-public class MainActivity extends AppCompatActivity implements MainViewModelContract.View {
-
-    private static final int REQUEST_ENABLE_BT = 1;
-
-    private ActivityMainBinding mBinding;
-    private MainViewModelContract.ViewModel mViewModel;
-    private String mBluetoothDeviceAddress;
-    private SharedPreferences mSharedPreferences;
-    private ProgressDialog mProgressDialog;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataBinding();
-        setupToolbar();
-        mBinding.heartRateSwitch.setChecked(false);
-        mViewModel.setHeartRateToggle(false);
-        mSharedPreferences = this.getSharedPreferences(getString(R.string.shared_preferences_key), MODE_PRIVATE);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.connecting));
-        mProgressDialog.setCancelable(false);
-    }
-
-    private void initDataBinding() {
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mViewModel = new MainViewModel(this, this);
-        mBinding.setViewModel((MainViewModel) mViewModel);
-    }
-
-    private void setupToolbar() {
-        Toolbar toolbar = mBinding.toolbar;
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        if (getFragmentManager().findFragmentById(R.id.content_main) == null) {
+            // update the main content by replacing fragments
+            Fragment fragment = new HomeFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -68,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
                 return true;
 
             case R.id.action_devices:
@@ -76,145 +68,72 @@ public class MainActivity extends AppCompatActivity implements MainViewModelCont
                     Intent intent = new Intent(this, ConnectDeviceActivity.class);
                     this.startActivity(intent);
                 } else {
-                    Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.error_bluetooth_le_not_supported, Toast.LENGTH_LONG).show();
                 }
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mBinding.heartRateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mViewModel.setHeartRateToggle(isChecked);
-                if (!isChecked) {
-                    mViewModel.disconnectBluetoothDevice();
-                    return;
-                }
-                if (checkForSavedBluetoothDevices()) {
-                    // Check if Bluetooth is supported and enabled
-                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (mBluetoothAdapter == null) {
-                        // Device does not support Bluetooth
-                        Toast.makeText(getApplicationContext(), R.string.error_bluetooth_le_not_supported, Toast.LENGTH_SHORT).show();
-                        mBinding.heartRateSwitch.setChecked(false);
-                        return;
-                    } else {
-                        if (!mBluetoothAdapter.isEnabled()) {
-                            // Bluetooth is not enable
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                            mBinding.heartRateSwitch.setChecked(false);
-                            return;
-                        }
-                    }
-                    // Show some progress bar. Trying to connect to device right now.
-                    mProgressDialog.show();
-                    mViewModel.connectToBluetoothDevice(mBluetoothDeviceAddress);
-                } else {
-                    mBinding.heartRateSwitch.setChecked(false);
-                    showFirstNeedToAddDeviceDialog();
-                }
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (getSupportFragmentManager().findFragmentByTag("History") != null) {
+                getSupportFragmentManager().popBackStack("HOME",
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                setTitle("RUNnnn");
+                mNavigationView.setCheckedItem(R.id.nav_home);
+            } else {
+                super.onBackPressed();
             }
-        });
+        }
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            return;
-        } else if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-            Logger.d("Result - OK");
-            // Show some progress bar. Trying to connect to device right now.
-            mProgressDialog.show();
-            mViewModel.connectToBluetoothDevice(mBluetoothDeviceAddress);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-    private boolean checkForSavedBluetoothDevices() {
-        mBluetoothDeviceAddress =
-                mSharedPreferences.getString(getString(R.string.saved_bluetooth_device_address),
-                        "empty");
-        Logger.d(mBluetoothDeviceAddress);
-        if (mBluetoothDeviceAddress.compareTo("empty") == 0) {
-            return false;
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+            setTitle("RUNnnn");
+            // update the main content by replacing fragments
+            Fragment fragment = new HomeFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();
+
+        } else if (id == R.id.nav_history) {
+            setTitle("History");
+            // update the main content by replacing fragments
+            Fragment fragment = new HistoryFragment();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.content_main, fragment, "History");
+            ft.addToBackStack("HOME");
+            ft.commit();
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void showFirstNeedToAddDeviceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(R.string.addDeviceInfoTitle);
-        builder.setMessage(R.string.addDeviceInfoMessage);
-        builder.setPositiveButton(R.string.addDeviceInfoPositive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
-    private void showCannotConnectToDeviceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(R.string.cantConnectDeviceInfoTitle);
-        builder.setMessage(R.string.cantConnectDeviceInfoMessage);
-        builder.setPositiveButton(R.string.cantConnectDeviceInfoPositive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mBinding.heartRateSwitch.setChecked(false);
-                mBinding.heartRateSwitch.toggle();
-            }
-        });
-        builder.setNegativeButton(R.string.cantConnectDeviceInfoNegative, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mBinding.heartRateSwitch.setChecked(false);
-                if (mProgressDialog.isShowing()) {
-                    mProgressDialog.dismiss();
-                }
-                dialog.dismiss();
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    @Override
-    public void connectedToLeDevice() {
-        if (mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-            mBinding.heartRateSwitch.setChecked(true);
-        }
-    }
-
-    @Override
-    public void cannotConnectToLeDevice() {
-        if (mProgressDialog.isShowing() && mBinding.heartRateSwitch.isChecked()) {
-            mProgressDialog.dismiss();
-            showCannotConnectToDeviceDialog();
-        }
-    }
-
-    @Override
-    public void deviceDisconnected() {
-        if (mBinding.heartRateSwitch.isChecked()) {
-            showCannotConnectToDeviceDialog();
-        }
+    public void setTitle(CharSequence title) {
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mViewModel.destroy();
     }
 }

@@ -4,15 +4,24 @@ package com.rodzik.kamil.runnnn.viewmodel.main;
 public interface MainViewModelContract {
 
     interface ViewModel {
-        void connectToBluetoothDevice(String deviceAddress);
-        void disconnectBluetoothDevice();
-        void setHeartRateToggle(boolean enabled);
+        void connectToBluetoothDevice();
+
         void destroy();
     }
 
     interface View {
-        void connectedToLeDevice();
-        void cannotConnectToLeDevice();
-        void deviceDisconnected();
+        void requestLocationAccessPermission();
+
+        void setHeartRateSwitchOff();
+
+        void requestEnableBluetooth();
+
+        void showProgressDialog();
+
+        void dismissProgressDialog();
+
+        void showFirstNeedToAddDeviceDialog();
+
+        void showCannotConnectToDeviceDialog();
     }
 }
