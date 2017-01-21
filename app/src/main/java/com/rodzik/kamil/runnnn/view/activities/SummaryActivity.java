@@ -34,6 +34,8 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        getSupportActionBar().setTitle(SummarySingleton.getInstance().getName());
     }
 
     private void initDataBinding() {

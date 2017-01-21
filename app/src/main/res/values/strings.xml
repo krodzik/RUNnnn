@@ -63,5 +63,6 @@
     <string name="averagePace">śr. tempo</string>
     <string name="averageHeartRate">śr. tętno</string>
     <string name="howToAddDeviceInfo">Naciśnij serce na pasku wyżej aby dodać urządzenie Bluetooth do pomiaru tętna.</string>
+    <string name="distance_in_time"> km w </string>
 
 </resources>

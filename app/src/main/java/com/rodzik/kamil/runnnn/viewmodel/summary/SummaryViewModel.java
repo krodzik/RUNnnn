@@ -92,10 +92,6 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         mContext.startActivity(intent);
     }
 
-    public String getName() {
-        return SummarySingleton.getInstance().getName();
-    }
-
     public String getTime() {
         return StopwatchProvider.formatToReadableTime(SummarySingleton.getInstance().getTimeInMilliseconds());
     }

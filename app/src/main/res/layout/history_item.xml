@@ -3,40 +3,53 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp">
 
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:text="14.02.16 14:23"
+        android:layout_marginRight="10dp"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/distance"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/date"
         android:layout_marginLeft="10dp"
-        android:textSize="22sp"
-        android:text="25" />
+        android:layout_marginRight="10dp"
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/distanceInTime"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/date"
         android:layout_toRightOf="@id/distance"
-        android:textSize="22sp"
-        android:text=" km w czasie " />
+        android:text="@string/distance_in_time"
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="22sp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/date"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_toRightOf="@id/distanceInTime"
-        android:text="0:12:33" />
+        android:textSize="22sp" />
+
+    <View
+        android:id="@+id/divider0"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/time"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/divider" />
 </RelativeLayout>

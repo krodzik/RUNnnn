@@ -46,32 +46,10 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.rodzik.kamil.runnnn.view.activities.SummaryActivity">
 
-                <LinearLayout
-                    android:id="@+id/header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.75"
-                        android:text="@{viewModel.name}"
-                        android:textAlignment="textStart"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        tools:text="21.01.17  20:33" />
-
-                </LinearLayout>
-
                 <RelativeLayout
                     android:id="@+id/map_container"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_below="@id/header"
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp">
 
