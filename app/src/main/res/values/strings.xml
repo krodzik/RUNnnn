@@ -52,8 +52,10 @@
     <string name="bpm">bpm</string>
 
     <!-- Summary Screen -->
-    <string name="headerMock">Trening #1</string>
-    <string name="doneButton">zakończ</string>
+    <string name="doneSaveButton">zapisz</string>
+    <string name="doneExitButton">wyjdź</string>
+    <string name="doneRejectButton">odrzuć</string>
+    <string name="doneDeleteButton">usuń</string>
     <string name="noRouteAvailable">Brak dostępnej trasy</string>
     <string name="mapScreenshotDescription">Map of the training route.</string>
     <string name="kmPerHour">km/h</string>

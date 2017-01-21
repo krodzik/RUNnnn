@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.databinding.ActivitySummaryBinding;
+import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel;
 import com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModelContract;
 
@@ -23,6 +26,14 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
         super.onCreate(savedInstanceState);
         initDataBinding();
         getSupportMapFragment().getMapAsync(googleMap -> mViewModel.onMapReady(googleMap));
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (SummarySingleton.getInstance().isFromDatabase()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     private void initDataBinding() {
@@ -43,6 +54,16 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void hideMapFragment() {
         if (getSupportMapFragment().getView() != null) {
             getSupportMapFragment().getView().setVisibility(View.GONE);
@@ -52,6 +73,9 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
     @Override
     public void onBackPressed() {
         // To disable back button in summary.
+        if (SummarySingleton.getInstance().isFromDatabase()){
+            super.onBackPressed();
+        }
     }
 
     @Override

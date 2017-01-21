@@ -1,6 +1,6 @@
 package com.rodzik.kamil.runnnn.model;
 
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,12 @@ import java.util.List;
 public class SummarySingleton {
     private static SummarySingleton mInstance = null;
 
-    private PolylineOptions mPolylineOptions;
+    private String mName;
+    private List<LatLng> mLatLngList;
     private double mDistance;   // in meters
     private long mTimeInMilliseconds;
     private List<Integer> mHeartRate = new ArrayList<>();
+    private boolean mFromDatabase;
 
     private SummarySingleton() {
     }
@@ -24,18 +26,28 @@ public class SummarySingleton {
     }
 
     public void reset() {
-        mPolylineOptions = null;
+        mName = null;
+        mLatLngList = null;
         mDistance = 0;
         mTimeInMilliseconds = 0;
         mHeartRate.clear();
+        mFromDatabase = false;
     }
 
-    public PolylineOptions getPolylineOptions() {
-        return mPolylineOptions;
+    public String getName() {
+        return mName;
     }
 
-    public void setPolylineOptions(PolylineOptions polylineOptions) {
-        this.mPolylineOptions = polylineOptions;
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
+    public List<LatLng> getLatLngList() {
+        return mLatLngList;
+    }
+
+    public void setLatLngList(List<LatLng> mLatLngList) {
+        this.mLatLngList = mLatLngList;
     }
 
     public double getDistance() {
@@ -60,5 +72,13 @@ public class SummarySingleton {
 
     public void setHeartRate(List<Integer> heartRate) {
         this.mHeartRate.addAll(heartRate);
+    }
+
+    public boolean isFromDatabase() {
+        return mFromDatabase;
+    }
+
+    public void setFromDatabase(boolean fromDatabase) {
+        mFromDatabase = fromDatabase;
     }
 }

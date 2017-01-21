@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rodzik.kamil.runnnn">
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
@@ -30,7 +33,9 @@
         <activity
             android:name=".view.activities.TrainingActivity"
             android:theme="@style/Theme.Design.NoActionBar" />
-        <activity android:name=".view.activities.SummaryActivity" />
+        <activity
+            android:name=".view.activities.SummaryActivity"
+            android:theme="@style/Theme.Design.NoActionBar" />
         <activity
             android:name=".view.activities.MapSummaryActivity"
             android:theme="@style/Theme.Design.NoActionBar" />
@@ -49,8 +54,10 @@
 
         <activity
             android:name=".view.activities.ConnectDeviceActivity"
-            android:theme="@style/Theme.Design.NoActionBar"/>
-        <service android:name=".service.BluetoothLeService" android:enabled="true"/>
+            android:theme="@style/Theme.Design.NoActionBar" />
+        <service
+            android:name=".service.BluetoothLeService"
+            android:enabled="true" />
     </application>
 
 </manifest>

@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rodzik.kamil.runnnn.R;
-import com.rodzik.kamil.runnnn.model.SummaryModel;
+import com.rodzik.kamil.runnnn.model.HistoryItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
-    private List<SummaryModel> mSummaryModels = new ArrayList<>();
+    private List<HistoryItemModel> mHistoryItemModels = new ArrayList<>();
     private final OnItemClickListener mListener;
 
     // Provide a reference to the views for each data item
@@ -32,7 +32,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             mTimeView = (TextView) v.findViewById(R.id.time);
         }
 
-        public void bind(final SummaryModel item, final int position, final OnItemClickListener listener) {
+        public void bind(final HistoryItemModel item, final int position, final OnItemClickListener listener) {
             mDateView.setText(item.getDate());
             mDistanceView.setText(String.valueOf(item.getDistance()));
             mTimeView.setText(item.getTime());
@@ -46,9 +46,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<SummaryModel> myDataset, OnItemClickListener listener) {
-        mSummaryModels = myDataset;
+    public HistoryAdapter(OnItemClickListener listener) {
         mListener = listener;
+    }
+
+    public void clearAdapter() {
+        mHistoryItemModels.clear();
+    }
+
+    public void setHistoryItemModels(List<HistoryItemModel> myDataset) {
+        mHistoryItemModels = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
@@ -65,12 +72,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.bind(mSummaryModels.get(position), position, mListener);
+        holder.bind(mHistoryItemModels.get(position), position, mListener);
     }
 
     @Override
     public int getItemCount() {
-        return mSummaryModels.size();
+        return mHistoryItemModels.size();
     }
 
     public interface OnItemClickListener {

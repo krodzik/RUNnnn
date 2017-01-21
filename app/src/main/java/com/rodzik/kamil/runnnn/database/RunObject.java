@@ -8,7 +8,7 @@ public class RunObject extends RealmObject {
     private String dateTime;
     private double distance;
     private long timeInMilliseconds;
-    private RealmList<RealmString> latLngList;
+    private String encodedLatLngList;
     private RealmList<RealmInt> heartRateList;
 
     public String getDateTime() {
@@ -35,12 +35,12 @@ public class RunObject extends RealmObject {
         this.timeInMilliseconds = timeInMilliseconds;
     }
 
-    public RealmList<RealmString> getLatLngList() {
-        return latLngList;
+    public String getEncodedLatLngList() {
+        return encodedLatLngList;
     }
 
-    public void setLatLngList(RealmList<RealmString> latLngList) {
-        this.latLngList = latLngList;
+    public void setEncodedLatLngList(String encodedLatLngList) {
+        this.encodedLatLngList = encodedLatLngList;
     }
 
     public RealmList<RealmInt> getHeartRateList() {

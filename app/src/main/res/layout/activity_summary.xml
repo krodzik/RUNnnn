@@ -6,12 +6,30 @@
         <variable
             name="viewModel"
             type="com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel" />
+
+        <import type="android.view.View"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                tools:ignore="AndroidLintUnusedAttribute" />
+
+        </android.support.design.widget.AppBarLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -41,11 +59,11 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.75"
-                        android:text="@string/headerMock"
-                        android:textAlignment="center"
-                        android:textSize="30sp"
+                        android:text="@{viewModel.name}"
+                        android:textAlignment="textStart"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        tools:text="Trening #1" />
+                        tools:text="21.01.17  20:33" />
 
                 </LinearLayout>
 
@@ -317,13 +335,30 @@
 
         </ScrollView>
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_weight="0"
-            android:onClick="@{viewModel::onDoneButtonClicked}"
-            android:text="@string/doneButton"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="60dp"
+            android:onClick="@{viewModel::onRejectButtonClicked}"
+            android:text="@{viewModel.isFromDatabase ? @string/doneDeleteButton : @string/doneRejectButton}"
             android:textAllCaps="true" />
+
+        <Button
+            android:layout_width="0dp"
+            android:visibility="@{viewModel.isFromDatabase ? View.GONE : View.VISIBLE}"
+            android:layout_weight="0.5"
+            android:layout_height="60dp"
+            android:onClick="@{viewModel::onSaveButtonClicked}"
+            android:text="@string/doneSaveButton"
+            android:textAllCaps="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
