@@ -10,11 +10,8 @@ android {
         minSdkVersion 18
         targetSdkVersion 25
         versionCode 1
-        versionName "0.5"
+        versionName "0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        // Enabling multidex support.
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -45,13 +42,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
 
-    compile 'com.android.support:multidex:1.0.1'
-
     // Logger
     compile 'com.orhanobut:logger:1.15'
 
     // Google Play Service
-    compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
 
     // RxJava
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
