@@ -6,12 +6,30 @@
         <variable
             name="viewModel"
             type="com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel" />
+
+        <import type="android.view.View"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                tools:ignore="AndroidLintUnusedAttribute" />
+
+        </android.support.design.widget.AppBarLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -328,11 +346,12 @@
             android:layout_weight="0.5"
             android:layout_height="60dp"
             android:onClick="@{viewModel::onRejectButtonClicked}"
-            android:text="@string/doneRejectButton"
+            android:text="@{viewModel.isFromDatabase ? @string/doneDeleteButton : @string/doneRejectButton}"
             android:textAllCaps="true" />
 
         <Button
             android:layout_width="0dp"
+            android:visibility="@{viewModel.isFromDatabase ? View.GONE : View.VISIBLE}"
             android:layout_weight="0.5"
             android:layout_height="60dp"
             android:onClick="@{viewModel::onSaveButtonClicked}"

@@ -25,7 +25,6 @@ public class DataFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // TODO Choose layout depending on available devices.
         Bundle args = getArguments();
         boolean isGpsEnable = args.getBoolean("MAP", false);
         boolean isHeartRateEnable = args.getBoolean("HEART_RATE", false);

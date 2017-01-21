@@ -13,6 +13,7 @@ public class SummarySingleton {
     private double mDistance;   // in meters
     private long mTimeInMilliseconds;
     private List<Integer> mHeartRate = new ArrayList<>();
+    private boolean mFromDatabase;
 
     private SummarySingleton() {
     }
@@ -30,6 +31,7 @@ public class SummarySingleton {
         mDistance = 0;
         mTimeInMilliseconds = 0;
         mHeartRate.clear();
+        mFromDatabase = false;
     }
 
     public String getName() {
@@ -70,5 +72,13 @@ public class SummarySingleton {
 
     public void setHeartRate(List<Integer> heartRate) {
         this.mHeartRate.addAll(heartRate);
+    }
+
+    public boolean isFromDatabase() {
+        return mFromDatabase;
+    }
+
+    public void setFromDatabase(boolean fromDatabase) {
+        mFromDatabase = fromDatabase;
     }
 }

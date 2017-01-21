@@ -1,12 +1,12 @@
 package com.rodzik.kamil.runnnn.model;
 
 
-public class SummaryModel {
+public class HistoryItemModel {
     private String date;
     private String time;
-    private double distance;
+    private String distance;
 
-    public SummaryModel(String date, String time, double distance) {
+    public HistoryItemModel(String date, String time, String distance) {
         this.date = date;
         this.time = time;
         this.distance = distance;
@@ -28,11 +28,11 @@ public class SummaryModel {
         this.time = time;
     }
 
-    public double getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 }

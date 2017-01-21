@@ -44,6 +44,7 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
     private boolean mIsPaused;
 
     public DataViewModel() {
+        SummarySingleton.getInstance().reset();
     }
 
     @Override

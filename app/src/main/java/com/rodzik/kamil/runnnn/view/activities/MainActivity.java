@@ -16,12 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.R;
 import com.rodzik.kamil.runnnn.view.fragments.HistoryFragment;
 import com.rodzik.kamil.runnnn.view.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +38,8 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         if (getFragmentManager().findFragmentById(R.id.content_main) == null) {
             // update the main content by replacing fragments
@@ -82,7 +84,14 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (getSupportFragmentManager().findFragmentByTag("History") != null) {
+                getSupportFragmentManager().popBackStack("HOME",
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                setTitle("RUNnnn");
+                mNavigationView.setCheckedItem(R.id.nav_home);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -92,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
             setTitle("RUNnnn");
             // update the main content by replacing fragments
@@ -103,14 +112,15 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.content_main, fragment);
             ft.commit();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_history) {
             setTitle("History");
             // update the main content by replacing fragments
             Fragment fragment = new HistoryFragment();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.content_main, fragment);
+            ft.replace(R.id.content_main, fragment, "History");
+            ft.addToBackStack("HOME");
             ft.commit();
         }
 

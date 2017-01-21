@@ -15,13 +15,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
+import com.rodzik.kamil.runnnn.database.RealmInt;
+import com.rodzik.kamil.runnnn.database.RunObject;
 import com.rodzik.kamil.runnnn.model.SummarySingleton;
+import com.rodzik.kamil.runnnn.utils.PolyUtil;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
 import java.util.List;
 import java.util.Locale;
 
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
@@ -33,6 +38,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     private Context mContext;
     private SummaryViewModelContract.View mView;
     private double mDistance;
+    public boolean isFromDatabase;
 
     private MapManager mMap;
 
@@ -43,6 +49,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
         mContext = context;
         mView = view;
         mDistance = SummarySingleton.getInstance().getDistance();
+        isFromDatabase = SummarySingleton.getInstance().isFromDatabase();
 
         noMapAvailableTextVisibility = new ObservableInt(View.VISIBLE);
         gpsRelatedFieldsVisibility = new ObservableInt(View.GONE);
@@ -131,14 +138,49 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     public void onRejectButtonClicked(View view) {
         // Delete training.
-        SummarySingleton.getInstance().reset();
+        if (isFromDatabase) {
+            // obtain the results of a query
+            final RealmResults<RunObject> results = mRealm.where(RunObject.class).equalTo("dateTime",
+                    SummarySingleton.getInstance().getName()).findAll();
 
+            mRealm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    // Delete all matches
+                    results.deleteAllFromRealm();
+                }
+            });
+        }
+        SummarySingleton.getInstance().reset();
         ((Activity) mContext).finish();
     }
 
     public void onSaveButtonClicked(View view) {
         // Saving training to database
+        // All writes must be wrapped in a transaction to facilitate safe multi threading
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                // Add a person
+                RunObject runObject = realm.createObject(RunObject.class);
+                runObject.setDateTime(SummarySingleton.getInstance().getName());
+                runObject.setTimeInMilliseconds(SummarySingleton.getInstance().getTimeInMilliseconds());
+                if (gpsRelatedFieldsVisibility.get() == View.VISIBLE) {
+                    String encodedLatLngList = PolyUtil.encode(SummarySingleton.getInstance().getLatLngList());
+                    runObject.setDistance(SummarySingleton.getInstance().getDistance());
+                    runObject.setEncodedLatLngList(encodedLatLngList);
+                }
+                if (heartRateRelatedFieldsVisibility.get() == View.VISIBLE) {
+                    RealmList<RealmInt> realmIntList = new RealmList();
+                    for (Integer heartRate : SummarySingleton.getInstance().getHeartRate()) {
+                        realmIntList.add(new RealmInt(heartRate));
+                    }
+                    runObject.setHeartRateList(realmIntList);
+                }
+            }
+        });
 
+        ((Activity) mContext).finish();
     }
 
     @Override
