@@ -40,7 +40,7 @@ public class SummaryActivity extends AppCompatActivity implements SummaryViewMod
 
     private void initDataBinding() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_summary);
-        mViewModel = new SummaryViewModel(this, this);
+        mViewModel = new SummaryViewModel(this, this, mBinding.chart);
         mBinding.setViewModel((SummaryViewModel) mViewModel);
     }
 

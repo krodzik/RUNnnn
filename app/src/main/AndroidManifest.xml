@@ -23,6 +23,7 @@
         android:theme="@style/Theme.Design">
         <activity
             android:name=".view.activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,12 +33,15 @@
         </activity>
         <activity
             android:name=".view.activities.TrainingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
         <activity
             android:name=".view.activities.SummaryActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
         <activity
             android:name=".view.activities.MapSummaryActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
 
         <!--
@@ -54,6 +58,7 @@
 
         <activity
             android:name=".view.activities.ConnectDeviceActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.NoActionBar" />
         <service
             android:name=".service.BluetoothLeService"

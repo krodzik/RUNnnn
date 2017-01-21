@@ -7,7 +7,7 @@
             name="viewModel"
             type="com.rodzik.kamil.runnnn.viewmodel.summary.SummaryViewModel" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -309,6 +309,36 @@
 
                 </RelativeLayout>
 
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/averageHeartRate"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/divider4"
+                    android:visibility="@{viewModel.heartRateRelatedFieldsVisibility}">
+
+                    <TextView
+                        android:id="@+id/chartName"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="Tętno w czasie biegu"/>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_below="@id/chartName"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp" />
+                </RelativeLayout>
+
             </RelativeLayout>
 
         </ScrollView>
@@ -316,25 +346,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="0">
+            android:layout_weight="0"
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="60dp"
-            android:onClick="@{viewModel::onRejectButtonClicked}"
-            android:text="@{viewModel.isFromDatabase ? @string/doneDeleteButton : @string/doneRejectButton}"
-            android:textAllCaps="true" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:onClick="@{viewModel::onRejectButtonClicked}"
+                android:text="@{viewModel.isFromDatabase ? @string/doneDeleteButton : @string/doneRejectButton}"
+                android:textAllCaps="true" />
 
-        <Button
-            android:layout_width="0dp"
-            android:visibility="@{viewModel.isFromDatabase ? View.GONE : View.VISIBLE}"
-            android:layout_weight="0.5"
-            android:layout_height="60dp"
-            android:onClick="@{viewModel::onSaveButtonClicked}"
-            android:text="@string/doneSaveButton"
-            android:textAllCaps="true" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:onClick="@{viewModel::onSaveButtonClicked}"
+                android:text="@string/doneSaveButton"
+                android:textAllCaps="true"
+                android:visibility="@{viewModel.isFromDatabase ? View.GONE : View.VISIBLE}" />
 
         </LinearLayout>
 

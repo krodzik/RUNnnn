@@ -9,10 +9,21 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.orhanobut.logger.Logger;
 import com.rodzik.kamil.runnnn.MapManager;
 import com.rodzik.kamil.runnnn.data.StopwatchProvider;
 import com.rodzik.kamil.runnnn.database.RealmInt;
@@ -21,6 +32,7 @@ import com.rodzik.kamil.runnnn.model.SummarySingleton;
 import com.rodzik.kamil.runnnn.utils.PolyUtil;
 import com.rodzik.kamil.runnnn.view.activities.MapSummaryActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +49,7 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     private Context mContext;
     private SummaryViewModelContract.View mView;
+    private LineChart mChart;
     private double mDistance;
     public boolean isFromDatabase;
 
@@ -45,9 +58,11 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
     private Realm mRealm;
 
     public SummaryViewModel(@NonNull Context context,
-                            SummaryViewModelContract.View view) {
+                            SummaryViewModelContract.View view,
+                            LineChart chart) {
         mContext = context;
         mView = view;
+        mChart = chart;
         mDistance = SummarySingleton.getInstance().getDistance();
         isFromDatabase = SummarySingleton.getInstance().isFromDatabase();
 
@@ -124,12 +139,83 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
             return "--";
         }
         heartRateRelatedFieldsVisibility.set(View.VISIBLE);
+
+        // Generate chart
+        generateHeartRateChart();
+
         int heartRateAverage = 0;
         for (Integer heartRate : heartRateList) {
             heartRateAverage += heartRate;
         }
         heartRateAverage /= heartRateList.size();
         return String.valueOf(heartRateAverage);
+    }
+
+    private void generateHeartRateChart() {
+        mChart.getAxisLeft().setTextColor(Color.WHITE);
+        mChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return StopwatchProvider.formatToReadableTime((long) value);
+            }
+        });
+        mChart.getXAxis().setTextColor(Color.WHITE);
+        mChart.getAxisRight().setEnabled(false);
+        mChart.getLegend().setTextColor(Color.WHITE);
+        Description description = new Description();
+        description.setText("");
+        mChart.setDescription(description);
+
+        Logger.d("Elements in heart rate : " + SummarySingleton.getInstance().getHeartRate().size());
+        Logger.d("Seconds in time : " + SummarySingleton.getInstance().getTimeInMilliseconds()/1000);
+
+        setData((int)SummarySingleton.getInstance().getTimeInMilliseconds()/1000,
+                SummarySingleton.getInstance().getHeartRate());
+        mChart.animateXY(2000, 0);
+        mChart.invalidate();
+    }
+
+    private void setData(int time, List<Integer> heartRateList) {
+
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+        if (heartRateList.size() < time) {
+            for (int i = heartRateList.size(); i >= time; i++) {
+                heartRateList.add(heartRateList.get(i-1));
+            }
+        }
+
+        for (int i = 0; i < time; i++) {
+            yVals.add(new Entry(i*1000, heartRateList.get(i)));
+        }
+
+        LineDataSet set1;
+        // create a dataset and give it a type
+        set1 = new LineDataSet(yVals, "Tętno");
+
+        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set1.setCubicIntensity(0.2f);
+        set1.setDrawCircles(false);
+        set1.setLineWidth(1.8f);
+        set1.setCircleRadius(4f);
+        set1.setCircleColor(Color.WHITE);
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+        set1.setColor(Color.WHITE);
+        set1.setFillColor(Color.WHITE);
+        set1.setFillAlpha(100);
+        set1.setDrawHorizontalHighlightIndicator(true);
+        set1.setFillFormatter(new IFillFormatter() {
+            @Override
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                return -10;
+            }
+        });
+
+        // create a data object with the datasets
+        LineData data = new LineData(set1);
+        data.setValueTextSize(9f);
+        data.setDrawValues(false);
+        mChart.setData(data);
     }
 
     public void onRejectButtonClicked(View view) {
@@ -167,9 +253,14 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
                     runObject.setEncodedLatLngList(encodedLatLngList);
                 }
                 if (heartRateRelatedFieldsVisibility.get() == View.VISIBLE) {
-                    RealmList<RealmInt> realmIntList = new RealmList();
+                    RealmList<RealmInt> realmIntList = new RealmList<RealmInt>();
                     for (Integer heartRate : SummarySingleton.getInstance().getHeartRate()) {
-                        realmIntList.add(new RealmInt(heartRate));
+                        RealmInt realmInt = new RealmInt(heartRate);
+                        if (realmInt.isManaged()) {
+                            realmIntList.add(realmInt);
+                        } else {
+                            realmIntList.add(mRealm.copyToRealm(realmInt));
+                        }
                     }
                     runObject.setHeartRateList(realmIntList);
                 }
