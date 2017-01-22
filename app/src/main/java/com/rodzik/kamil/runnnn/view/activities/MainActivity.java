@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-            setTitle("RUNnnn");
+            setTitle(R.string.app_name);
             // update the main content by replacing fragments
             Fragment fragment = new HomeFragment();
 
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_history) {
-            setTitle("History");
+            setTitle(R.string.history_nav_drawer);
             // update the main content by replacing fragments
             Fragment fragment = new HistoryFragment();
 

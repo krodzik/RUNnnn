@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:text="@{trainingData.heartRate}"
-                    android:textSize="34sp"
+                    android:textSize="44sp"
                     tools:text="00" />
 
                 <TextView

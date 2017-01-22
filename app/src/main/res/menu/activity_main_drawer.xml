@@ -5,11 +5,11 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_directions_run_black_24dp"
-            android:title="Training" />
+            android:title="@string/training_nav_drawer" />
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_equalizer_black_24dp"
-            android:title="History" />
+            android:title="@string/history_nav_drawer" />
     </group>
 
     <!--<item android:title="Communicate">

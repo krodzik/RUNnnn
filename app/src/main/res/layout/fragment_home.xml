@@ -11,52 +11,23 @@
     <RelativeLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        tools:context="com.rodzik.kamil.runnnn.view.activities.MainActivity">
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="match_parent"
+            tools:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/howToAddDeviceInfo" />
-
-        <LinearLayout
-            android:id="@+id/gps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_weight="0.25"
-                android:src="@drawable/ic_gps_fixed_white_24dp" />
-
-            <Switch
-                android:id="@+id/gpsSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_weight="0.75"
-                android:checked="@={viewModel.gpsChecked}"
-                android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onGpsCheckedChanged(isChecked, context)}"
-                android:text="@string/gps"
-                android:textSize="20sp" />
-
-        </LinearLayout>
+            android:text="@string/howToAddDeviceInfo"
+            android:visibility="@{viewModel.howToConnectDeviceTextVisibility}" />
 
         <LinearLayout
             android:id="@+id/heartRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/gps"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
@@ -77,6 +48,35 @@
                 android:checked="@={viewModel.heartRateChecked}"
                 android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onHeartRateCheckedChanged(isChecked, context)}"
                 android:text="@string/heart_rate"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/heartRate"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="0.25"
+                android:src="@drawable/ic_gps_fixed_white_24dp" />
+
+            <Switch
+                android:id="@+id/gpsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="0.75"
+                android:checked="@={viewModel.gpsChecked}"
+                android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onGpsCheckedChanged(isChecked, context)}"
+                android:text="@string/gps"
                 android:textSize="20sp" />
 
         </LinearLayout>
