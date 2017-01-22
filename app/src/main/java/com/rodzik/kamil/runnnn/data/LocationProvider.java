@@ -144,7 +144,9 @@ public class LocationProvider implements ResultCallback<LocationSettingsResult> 
     }
 
     public void disconnectLocationProvider() {
-        stopLocationUpdates();
+        if (mOnLocationChangedListener != null) {
+            stopLocationUpdates();
+        }
         mGoogleApiClient.disconnect();
     }
 }
