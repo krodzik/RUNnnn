@@ -102,13 +102,13 @@ public class DataViewModel implements DataViewModelContract.ViewModel, HeartRate
         long currentLocationTime = mCurrentLocation.getTime();
         double timeBetweenTwoLocationsInMinutes = (currentLocationTime - lastLocationTime) / 1000;
 
-        mBufferForPaceArray[4][0] = timeBetweenTwoLocationsInMinutes;
-        mBufferForPaceArray[4][1] = mDistanceBetweenTwoLocations;
+        mBufferForPaceArray[PACE_BUFFER_SIZE - 1][0] = timeBetweenTwoLocationsInMinutes;
+        mBufferForPaceArray[PACE_BUFFER_SIZE - 1][1] = mDistanceBetweenTwoLocations;
 
         if (mBufferForPaceArray[0][1] == 0) {
             mPace = 0;
         } else {
-            // Calculating average pace for "PACE_BUFFER_SIZE" last locations.
+            // Calculating average pace for PACE_BUFFER_SIZE last locations.
             double sumTimeBetweenLocations = 0;
             double sumDistanceBetweenLocations = 0;
             for (double[] location : mBufferForPaceArray) {
