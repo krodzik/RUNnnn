@@ -57,7 +57,8 @@ public class MapViewModel implements MapViewModelContract.ViewModel,
     }
 
     private void subscribeLocation() {
-        mDisposables.add(LocationProvider.getLocationObservable().subscribeWith(new DisposableObserver<Location>() {
+        mDisposables.add(LocationProvider.getLocationObservable()
+                .subscribeWith(new DisposableObserver<Location>() {
             @Override
             public void onNext(Location location) {
                 locationChanged(location);

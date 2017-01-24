@@ -41,9 +41,6 @@ dependencies {
     })
     compile 'com.android.support:design:25.1.0'
 
-    // Logger
-    compile 'com.orhanobut:logger:1.15'
-
     // Google Play Service
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
