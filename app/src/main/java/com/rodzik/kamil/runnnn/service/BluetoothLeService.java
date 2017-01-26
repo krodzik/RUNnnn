@@ -100,7 +100,11 @@ public class BluetoothLeService extends Service {
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
+        intent.putExtra(EXTRA_DATA, String.valueOf(convertHeartRateCharacteristicToInt(characteristic)));
+        sendBroadcast(intent);
+    }
 
+    private int convertHeartRateCharacteristicToInt(BluetoothGattCharacteristic characteristic) {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
@@ -112,10 +116,9 @@ public class BluetoothLeService extends Service {
             } else {
                 format = BluetoothGattCharacteristic.FORMAT_UINT8;
             }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
+            return characteristic.getIntValue(format, 1);
         }
-        sendBroadcast(intent);
+        return 0;
     }
 
     // Iterate through the supported GATT Services/Characteristics and getting

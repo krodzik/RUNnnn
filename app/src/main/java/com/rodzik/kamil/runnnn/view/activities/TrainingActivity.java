@@ -97,7 +97,7 @@ public class TrainingActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        // TODO Create a Collection of fragments and iterate through it.
+        // TODO Create a Collection of fragments and iterate through it. Although for now it's fine.
         adapter.addFragment(mDataFragment, this.getString(R.string.dataTab));
         if (isMapEnable) {
             adapter.addFragment(mMapFragment, this.getString(R.string.mapTab));
