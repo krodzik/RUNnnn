@@ -235,21 +235,19 @@ public class SummaryViewModel implements SummaryViewModelContract.ViewModel,
 
     public void onSaveButtonClicked(View view) {
         // Saving training to database
-        // All writes must be wrapped in a transaction to facilitate safe multi threading
         mRealm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                // Add a person
                 RunObject runObject = realm.createObject(RunObject.class);
                 runObject.setDateTime(SummarySingleton.getInstance().getName());
                 runObject.setTimeInMilliseconds(SummarySingleton.getInstance().getTimeInMilliseconds());
                 if (gpsRelatedFieldsVisibility.get() == View.VISIBLE) {
                     String encodedLatLngList = PolyUtil.encode(SummarySingleton.getInstance().getLatLngList());
-                    runObject.setDistance(SummarySingleton.getInstance().getDistance());
                     runObject.setEncodedLatLngList(encodedLatLngList);
+                    runObject.setDistance(SummarySingleton.getInstance().getDistance());
                 }
                 if (heartRateRelatedFieldsVisibility.get() == View.VISIBLE) {
-                    RealmList<RealmInt> realmIntList = new RealmList<RealmInt>();
+                    RealmList<RealmInt> realmIntList = new RealmList<>();
                     for (Integer heartRate : SummarySingleton.getInstance().getHeartRate()) {
                         RealmInt realmInt = new RealmInt(heartRate);
                         if (realmInt.isManaged()) {
